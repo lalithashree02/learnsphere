@@ -187,54 +187,66 @@ body.login-page{max-width:520px;padding-top:72px}.login-page .container{width:10
                     }
                 );
 
-                const result = await response.json();
+                const responseText = await response.text();
+                let result;
 
-                if (response.ok) {
-
-                    message.style.color = "green";
-
-                    message.innerText =
-                        "Login successful!";
-
-                    /*
-                     * Save student details for the dashboard.
-                     * The backend does NOT send the password.
-                     */
-                    localStorage.setItem(
-                        "studentId",
-                        result.id
-                    );
-
-                    localStorage.setItem(
-                        "studentName",
-                        result.name
-                    );
-
-                    localStorage.setItem(
-                        "studentEmail",
-                        result.email
-                    );
-
-                    localStorage.setItem(
-                        "careerGoal",
-                        result.careerGoal
-                    );
-
-                    setTimeout(function() {
-
-                        window.location.href =
-                            "student-dashboard.html";
-
-                    }, 1000);
-
-                } else {
-
-                    message.style.color = "red";
-
-                    message.innerText =
-                        result;
-
+                try {
+                    result = responseText ? JSON.parse(responseText) : null;
+                } catch {
+                    result = responseText;
                 }
+
+                if (!response.ok) {
+                    message.style.color = "red";
+                    message.innerText =
+                        typeof result === "string" && result.trim()
+                            ? result
+                            : `Login failed (HTTP ${response.status}).`;
+                    return;
+                }
+
+                if (!result || typeof result !== "object") {
+                    message.style.color = "red";
+                    message.innerText =
+                        `Unexpected server response (HTTP ${response.status}).`;
+                    return;
+                }
+
+                message.style.color = "green";
+
+                message.innerText =
+                    "Login successful!";
+
+                /*
+                 * Save student details for the dashboard.
+                 * The backend does NOT send the password.
+                 */
+                localStorage.setItem(
+                    "studentId",
+                    result.id
+                );
+
+                localStorage.setItem(
+                    "studentName",
+                    result.name
+                );
+
+                localStorage.setItem(
+                    "studentEmail",
+                    result.email
+                );
+
+                localStorage.setItem(
+                    "careerGoal",
+                    result.careerGoal
+                );
+
+                setTimeout(function() {
+
+                    window.location.href =
+                        "student-dashboard.html";
+
+                }, 1000);
 
             } catch (error) {
 
