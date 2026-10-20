@@ -239,7 +239,9 @@ th{background:var(--primary);color:var(--primary-ink)}
 
                     document.getElementById("message").innerText =
                         errorMessage ||
-                        `Registration failed (HTTP ${response.status}). Check that the email is not already registered.`;
+                        (response.status === 409
+                            ? "Email already registered. Try logging in or use another email."
+                            : `Server error (HTTP ${response.status}). Check the deployment logs and try again.`);
                 }
 
             } catch (error) {
