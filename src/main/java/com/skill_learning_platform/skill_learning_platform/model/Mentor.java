@@ -1,7 +1,7 @@
-
 package com.skill_learning_platform.skill_learning_platform.model;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,34 +20,37 @@ public class Mentor {
     private String email;
 
     private String password;
+
     private String phoneNumber;
+
     private String profilePhoto;
 
     // Education Details
     private String educationLevel;
+
     private String fieldOfStudy;
+
     private String institutionName;
+
     private String educationStatus;
 
     // Professional Details
     private String yearsOfExperience;
+
     private String specialization;
 
     // Technical Skills
     @ElementCollection
     @CollectionTable(
-        name = "mentor_skills",
-        joinColumns = @JoinColumn(name = "mentor_id"),
-        uniqueConstraints = @UniqueConstraint(
-            columnNames = {"mentor_id", "skill"}
-        )
+            name = "mentor_skills",
+            joinColumns = @JoinColumn(name = "mentor_id")
     )
-    @IdClass(MentorSkillId.class)
     @Column(name = "skill")
     private List<String> skills = new ArrayList<>();
 
     // Professional Profiles
     private String linkedinUrl;
+
     private String githubUrl;
 
     @Column(columnDefinition = "TEXT")
@@ -149,9 +152,10 @@ public class Mentor {
     }
 
     public void setSkills(List<String> skills) {
-        this.skills = (skills == null)
-                ? new ArrayList<>()
-                : skills;
+        this.skills =
+                skills == null
+                        ? new ArrayList<>()
+                        : skills;
     }
 
     public String getLinkedinUrl() {
