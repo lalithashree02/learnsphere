@@ -10,6 +10,8 @@ public interface MentorRepository extends JpaRepository<Mentor, Long> {
 
     Optional<Mentor> findByEmail(String email);
 
+    boolean existsByEmail(String email);
+
     List<Mentor> findBySkillsContainingIgnoreCase(String skill);
 
 }

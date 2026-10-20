@@ -9,6 +9,7 @@ import com.skill_learning_platform.skill_learning_platform.service.CourseService
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpSession;
 
@@ -46,10 +47,24 @@ public class MentorController {
 
     // Register a mentor
     @PostMapping("/register")
-    public ResponseEntity<Mentor> registerMentor(@RequestBody Mentor mentor) {
-        Mentor savedMentor = mentorService.registerMentor(mentor);
-        savedMentor.setPassword(null);
-        return ResponseEntity.ok(savedMentor);
+    public ResponseEntity<?> registerMentor(@RequestBody Mentor mentor) {
+        if (mentor.getEmail() != null && mentorRepository.existsByEmail(mentor.getEmail())) {
+            return ResponseEntity.status(409).body(Map.of(
+                    "message",
+                    "Email already registered. Try logging in or use another email."
+            ));
+        }
+
+        try {
+            Mentor savedMentor = mentorService.registerMentor(mentor);
+            savedMentor.setPassword(null);
+            return ResponseEntity.ok(savedMentor);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(409).body(Map.of(
+                    "message",
+                    "A mentor account with that email may already exist. Try logging in or use another email."
+            ));
+        }
     }
 
     // Get all mentors

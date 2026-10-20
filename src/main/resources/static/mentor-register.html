@@ -227,13 +227,24 @@ th{background:var(--primary);color:var(--primary-ink)}
 
                     document.getElementById("mentorForm").reset();
                 } else {
+                    const responseText = await response.text();
+                    let errorMessage = "";
+
+                    try {
+                        const errorBody = responseText ? JSON.parse(responseText) : null;
+                        errorMessage = errorBody?.message || "";
+                    } catch {
+                        errorMessage = "";
+                    }
+
                     document.getElementById("message").innerText =
-                        "Registration failed!";
+                        errorMessage ||
+                        `Registration failed (HTTP ${response.status}). Check that the email is not already registered.`;
                 }
 
             } catch (error) {
                 document.getElementById("message").innerText =
-                    "Error connecting to server!";
+                    "Could not reach the server. Check your connection and try again.";
             }
         });
     </script>
