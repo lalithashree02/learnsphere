@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Build practical technical skills with structured courses, mentor guidance, assessments, and project feedback.">
+    <meta name="theme-color" content="#f7f2e8">
+    <title>LearnSphere | Learn with mentors</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap">
+    <style>
+        :root {
+            --bg: #f7f2e8;
+            --card: #fffdf8;
+            --ink: #1f2e27;
+            --primary: #2c5a45;
+            --primary-ink: #fbf8f1;
+            --accent: #a94f20;
+            --muted: #59635e;
+            --border: #e6dccb;
+            --radius: 20px;
+            --shadow: 0 24px 60px -32px rgba(44, 90, 69, .5);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--bg);
+            font: 16px/1.65 "Manrope", system-ui, sans-serif;
+        }
+        a { color: inherit; }
+        a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+        .shell { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+        .site-header { padding: 22px 0; }
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+        }
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            color: var(--primary);
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .brand-mark {
+            display: grid;
+            width: 38px;
+            height: 38px;
+            place-items: center;
+            border-radius: 13px;
+            background: var(--primary);
+            color: var(--primary-ink);
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 23px;
+        }
+        .nav-links { display: flex; align-items: center; gap: 30px; }
+        .nav-links a {
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color .2s ease;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-actions { display: flex; align-items: center; gap: 18px; }
+        .login-link { color: var(--primary); font-size: 14px; font-weight: 800; text-decoration: none; }
+        .button {
+            display: inline-flex;
+            min-height: 48px;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 21px;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            background: var(--primary);
+            color: var(--primary-ink);
+            font-size: 14px;
+            font-weight: 800;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 10px 24px -16px rgba(31, 46, 39, .75);
+            transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+        }
+        .button:hover { transform: translateY(-2px); background: #234b39; box-shadow: var(--shadow); }
+        .button-light { border-color: var(--border); background: var(--card); color: var(--primary); box-shadow: none; }
+        .button-light:hover { border-color: var(--primary); background: var(--card); }
+
+        .hero { padding: 70px 0 92px; }
+        .hero-grid { display: grid; grid-template-columns: 1.04fr .96fr; align-items: center; gap: 60px; }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 0 20px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+        .eyebrow::before { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); content: ""; }
+        h1, h2, h3 { margin: 0; color: var(--primary); font-family: "Fraunces", Georgia, serif; font-weight: 600; line-height: 1.12; }
+        h1 { max-width: 690px; font-size: clamp(3.2rem, 6.4vw, 5.45rem); letter-spacing: -.055em; }
+        h1 span { color: var(--accent); }
+        .hero-copy { max-width: 530px; margin: 24px 0 30px; color: var(--muted); font-size: 18px; }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .hero-note { margin: 17px 0 0; color: var(--muted); font-size: 12px; }
+        .hero-visual {
+            position: relative;
+            min-height: 445px;
+            display: grid;
+            place-items: center;
+            isolation: isolate;
+        }
+        .hero-visual::before {
+            position: absolute;
+            z-index: -1;
+            width: min(410px, 90%);
+            aspect-ratio: 1;
+            border-radius: 46% 54% 58% 42% / 45% 42% 58% 55%;
+            background: #e9dfc9;
+            content: "";
+            transform: rotate(-8deg);
+        }
+        .learning-card {
+            width: min(385px, 92%);
+            padding: 26px;
+            border: 1px solid rgba(230, 220, 203, .9);
+            border-radius: 24px;
+            background: var(--card);
+            box-shadow: 0 28px 70px -34px rgba(31, 46, 39, .44);
+            transform: rotate(2deg);
+        }
+        .learning-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+        .learning-label { margin: 0 0 5px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+        .learning-card h2 { font-size: 25px; }
+        .round-icon {
+            display: grid;
+            width: 44px;
+            height: 44px;
+            flex: 0 0 auto;
+            place-items: center;
+            border-radius: 15px;
+            background: #f2e3d5;
+            color: var(--accent);
+            font-size: 21px;
+            font-weight: 800;
+        }
+        .path-list { display: grid; gap: 0; margin: 25px 0 0; padding: 0; list-style: none; }
+        .path-step { position: relative; display: grid; grid-template-columns: 40px 1fr; gap: 14px; padding-bottom: 21px; }
+        .path-step:not(:last-child)::after { position: absolute; top: 35px; bottom: 0; left: 17px; width: 2px; background: var(--border); content: ""; }
+        .step-number { z-index: 1; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--border); border-radius: 50%; background: var(--card); color: var(--primary); font-size: 12px; font-weight: 800; }
+        .path-step:first-child .step-number { border-color: var(--primary); background: var(--primary); color: white; }
+        .step-copy { padding-top: 1px; }
+        .step-copy strong { display: block; color: var(--ink); font-size: 14px; }
+        .step-copy span { color: var(--muted); font-size: 12px; }
+        .mentor-note {
+            position: absolute;
+            right: -13px;
+            bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 17px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+            transform: rotate(-3deg);
+        }
+        .mentor-avatar { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 50%; background: var(--primary); color: white; font-size: 12px; font-weight: 800; }
+        .mentor-note strong { display: block; font-size: 12px; }
+        .mentor-note span { color: var(--muted); font-size: 11px; }
+
+        .value-strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(255, 253, 248, .54); }
+        .value-list { display: grid; grid-template-columns: repeat(3, 1fr); padding: 23px 0; }
+        .value-item { display: flex; align-items: center; justify-content: center; gap: 11px; padding: 4px 18px; color: var(--primary); font-size: 13px; font-weight: 800; text-align: center; }
+        .value-item + .value-item { border-left: 1px solid var(--border); }
+        .value-check { display: grid; width: 25px; height: 25px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #e4eadf; color: var(--primary); }
+
+        .section { padding: 100px 0; }
+        .section-heading { max-width: 690px; margin: 0 auto 46px; text-align: center; }
+        .section-heading .eyebrow { justify-content: center; }
+        h2.section-title { font-size: clamp(2.35rem, 4.5vw, 3.5rem); letter-spacing: -.04em; }
+        .section-intro { max-width: 580px; margin: 16px auto 0; color: var(--muted); }
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .feature-card {
+            min-height: 255px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--card);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+        .feature-icon { display: grid; width: 48px; height: 48px; margin-bottom: 27px; place-items: center; border-radius: 16px; background: #e8eee5; color: var(--primary); font-size: 22px; font-weight: 800; }
+        .feature-card:nth-child(2) .feature-icon { background: #f2e3d5; color: var(--accent); }
+        .feature-card h3 { margin-bottom: 10px; font-size: 23px; }
+        .feature-card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+        .journey { padding: 76px 0; border-radius: 32px; background: var(--primary); color: var(--primary-ink); }
+        .journey-inner { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 70px; }
+        .journey .eyebrow { color: #e7c8a8; }
+        .journey h2 { color: var(--primary-ink); font-size: clamp(2.35rem, 4vw, 3.45rem); letter-spacing: -.04em; }
+        .journey-copy { margin: 18px 0 0; color: #d9e3dc; }
+        .journey-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .journey-step { min-height: 170px; padding: 20px 17px; border: 1px solid rgba(255, 255, 255, .19); border-radius: 17px; background: rgba(255, 255, 255, .07); }
+        .journey-step span { display: block; margin-bottom: 28px; color: #e7c8a8; font-size: 11px; font-weight: 800; letter-spacing: .1em; }
+        .journey-step strong { display: block; margin-bottom: 7px; color: white; font-size: 14px; }
+        .journey-step p { margin: 0; color: #d9e3dc; font-size: 12px; line-height: 1.5; }
+
+        .audience-section { padding: 100px 0; }
+        .audience-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .audience-card { display: flex; flex-direction: column; align-items: flex-start; min-height: 320px; padding: 34px; border: 1px solid var(--border); border-radius: 24px; background: var(--card); }
+        .audience-card.mentor { background: #efe9db; }
+        .audience-card .eyebrow { margin-bottom: 16px; }
+        .audience-card h3 { max-width: 430px; font-size: clamp(1.8rem, 3vw, 2.5rem); letter-spacing: -.035em; }
+        .audience-card p { max-width: 470px; margin: 13px 0 24px; color: var(--muted); }
+        .audience-card .button { margin-top: auto; }
+
+        .final-cta { padding: 28px 0 96px; }
+        .cta-panel { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 42px 48px; border: 1px solid var(--border); border-radius: 24px; background: var(--card); }
+        .cta-panel h2 { font-size: clamp(2rem, 4vw, 2.8rem); letter-spacing: -.04em; }
+        .cta-panel p { margin: 9px 0 0; color: var(--muted); }
+        .site-footer { padding: 27px 0; border-top: 1px solid var(--border); }
+        .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .footer-copy { margin: 0; color: var(--muted); font-size: 12px; }
+        .footer-links { display: flex; flex-wrap: wrap; gap: 20px; }
+        .footer-links a { color: var(--muted); font-size: 12px; font-weight: 700; text-decoration: none; }
+        .footer-links a:hover { color: var(--primary); }
+
+        @media (max-width: 900px) {
+            .nav-links { gap: 17px; }
+            .hero { padding: 50px 0 70px; }
+            .hero-grid { grid-template-columns: 1fr .85fr; gap: 28px; }
+            .hero-visual { min-height: 390px; }
+            .mentor-note { right: -4px; }
+            .journey-inner { gap: 36px; }
+        }
+        @media (max-width: 700px) {
+            .shell { width: min(100% - 36px, 540px); }
+            .site-header { padding: 16px 0; }
+            .nav { flex-wrap: wrap; gap: 15px; }
+            .nav-links { order: 3; width: 100%; justify-content: space-between; gap: 10px; padding-top: 12px; border-top: 1px solid var(--border); }
+            .nav-links a { font-size: 12px; }
+            .nav-actions { margin-left: auto; gap: 12px; }
+            .nav-actions .button { min-height: 42px; padding: 9px 14px; font-size: 12px; }
+            .login-link { font-size: 12px; }
+            .hero { padding: 54px 0 60px; }
+            .hero-grid { grid-template-columns: 1fr; gap: 30px; }
+            h1 { font-size: clamp(3rem, 13vw, 4.6rem); }
+            .hero-copy { font-size: 16px; }
+            .hero-visual { min-height: 370px; }
+            .learning-card { width: min(360px, 88%); }
+            .mentor-note { right: 0; bottom: 20px; }
+            .value-list { grid-template-columns: 1fr; gap: 13px; padding: 20px 0; }
+            .value-item { justify-content: flex-start; padding: 0; text-align: left; }
+            .value-item + .value-item { border: 0; }
+            .section, .audience-section { padding: 72px 0; }
+            .section-heading { margin-bottom: 30px; }
+            .feature-grid { grid-template-columns: 1fr; gap: 12px; }
+            .feature-card { min-height: auto; padding: 24px; }
+            .feature-icon { margin-bottom: 17px; }
+            .journey { padding: 52px 0; border-radius: 24px; }
+            .journey-inner { grid-template-columns: 1fr; gap: 30px; }
+            .journey-steps { grid-template-columns: 1fr; }
+            .journey-step { min-height: auto; }
+            .journey-step span { margin-bottom: 12px; }
+            .audience-grid { grid-template-columns: 1fr; }
+            .audience-card { min-height: 290px; padding: 27px; }
+            .final-cta { padding: 15px 0 70px; }
+            .cta-panel { align-items: flex-start; flex-direction: column; padding: 30px; }
+            .footer-inner { align-items: flex-start; flex-direction: column; gap: 13px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="shell nav">
+            <a class="brand" href="index.html" aria-label="LearnSphere home">
+                <span class="brand-mark" aria-hidden="true">S</span>
+                <span>LearnSphere</span>
+            </a>
+            <nav class="nav-links" aria-label="Main navigation">
+                <a href="#learning">Learning</a>
+                <a href="#how-it-works">How it works</a>
+                <a href="#mentors">For mentors</a>
+            </nav>
+            <div class="nav-actions">
+                <a class="login-link" href="student-login.html">Log in</a>
+                <a class="button" href="student-register.html">Get started <span aria-hidden="true">↗</span></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="shell hero-grid">
+                <div class="hero-content">
+                    <p class="eyebrow">Learn with purpose. Grow with support.</p>
+                    <h1>Build skills that move <span>you forward.</span></h1>
+                    <p class="hero-copy">Make progress with structured technical courses, practical assessments, and guidance from mentors who understand your learning goals.</p>
+                    <div class="hero-actions">
+                        <a class="button" href="student-register.html">Start learning <span aria-hidden="true">→</span></a>
+                        <a class="button button-light" href="#learning">Explore the platform</a>
+                    </div>
+                    <p class="hero-note">A place to learn, practice, and get useful feedback—at your own pace.</p>
+                </div>
+                <div class="hero-visual" aria-label="Illustration of a structured learning path" role="img">
+                    <div class="learning-card">
+                        <div class="learning-card-top">
+                            <div>
+                                <p class="learning-label">Your learning path</p>
+                                <h2>One step at a time</h2>
+                            </div>
+                            <span class="round-icon" aria-hidden="true">✳</span>
+                        </div>
+                        <ol class="path-list">
+                            <li class="path-step">
+                                <span class="step-number">01</span>
+                                <span class="step-copy"><strong>Learn the concepts</strong><span>Follow course content at your pace</span></span>
+                            </li>
+                            <li class="path-step">
+                                <span class="step-number">02</span>
+                                <span class="step-copy"><strong>Put skills into practice</strong><span>Try assessments and project work</span></span>
+                            </li>
+                            <li class="path-step">
+                                <span class="step-number">03</span>
+                                <span class="step-copy"><strong>Get guidance</strong><span>Connect with mentors and get feedback</span></span>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="mentor-note">
+                        <span class="mentor-avatar" aria-hidden="true">ML</span>
+                        <span><strong>Keep making progress</strong><span>Learn with mentor support</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="value-strip" aria-label="Learning platform benefits">
+            <div class="shell value-list">
+                <div class="value-item"><span class="value-check" aria-hidden="true">✓</span>Structured technical courses</div>
+                <div class="value-item"><span class="value-check" aria-hidden="true">✓</span>Practice through assessments</div>
+                <div class="value-item"><span class="value-check" aria-hidden="true">✓</span>Mentor guidance and feedback</div>
+            </div>
+        </div>
+
+        <section class="section" id="learning">
+            <div class="shell">
+                <div class="section-heading">
+                    <p class="eyebrow">Designed for real progress</p>
+                    <h2 class="section-title">More than lessons. A way to keep moving.</h2>
+                    <p class="section-intro">Build understanding, test what you know, and get support as you work toward your next goal.</p>
+                </div>
+                <div class="feature-grid">
+                    <article class="feature-card">
+                        <span class="feature-icon" aria-hidden="true">▤</span>
+                        <h3>Learn in a clear sequence</h3>
+                        <p>Explore course material organized into manageable topics, so it is easier to focus on what comes next.</p>
+                    </article>
+                    <article class="feature-card">
+                        <span class="feature-icon" aria-hidden="true">⌘</span>
+                        <h3>Practice what you learn</h3>
+                        <p>Check your understanding with skill-based assessments and apply your knowledge through project work.</p>
+                    </article>
+                    <article class="feature-card">
+                        <span class="feature-icon" aria-hidden="true">↗</span>
+                        <h3>Get feedback that helps</h3>
+                        <p>Connect with mentors, ask questions, and receive feedback to help you make your next improvement.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="journey" id="how-it-works">
+            <div class="shell journey-inner">
+                <div>
+                    <p class="eyebrow">A practical learning loop</p>
+                    <h2>Learn it. Try it. Improve it.</h2>
+                    <p class="journey-copy">Keep learning active by pairing course content with practice and thoughtful feedback.</p>
+                </div>
+                <div class="journey-steps">
+                    <div class="journey-step">
+                        <span>STEP 01</span>
+                        <strong>Choose a direction</strong>
+                        <p>Set a learning goal and explore relevant courses.</p>
+                    </div>
+                    <div class="journey-step">
+                        <span>STEP 02</span>
+                        <strong>Build and practice</strong>
+                        <p>Work through topics, assessments, and projects.</p>
+                    </div>
+                    <div class="journey-step">
+                        <span>STEP 03</span>
+                        <strong>Grow with feedback</strong>
+                        <p>Use mentor guidance to keep improving.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="audience-section" id="mentors">
+            <div class="shell">
+                <div class="section-heading">
+                    <p class="eyebrow">Built for a learning community</p>
+                    <h2 class="section-title">Make your next step count.</h2>
+                    <p class="section-intro">Whether you are developing your skills or sharing what you know, there is a place for you here.</p>
+                </div>
+                <div class="audience-grid">
+                    <article class="audience-card">
+                        <p class="eyebrow">For learners</p>
+                        <h3>Turn your curiosity into capability.</h3>
+                        <p>Explore technical courses, practice your skills, track your learning, and connect with mentors for guidance.</p>
+                        <a class="button" href="student-register.html">Create a learner account <span aria-hidden="true">→</span></a>
+                    </article>
+                    <article class="audience-card mentor">
+                        <p class="eyebrow">For mentors</p>
+                        <h3>Help someone make progress.</h3>
+                        <p>Share your expertise, create course content, support learners, and offer feedback on their work.</p>
+                        <a class="button button-light" href="mentor-register.html">Join as a mentor <span aria-hidden="true">→</span></a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="final-cta">
+            <div class="shell cta-panel">
+                <div>
+                    <h2>Ready to get started?</h2>
+                    <p>Choose a goal, take the first step, and build from there.</p>
+                </div>
+                <a class="button" href="student-register.html">Start learning <span aria-hidden="true">→</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="shell footer-inner">
+            <p class="footer-copy">© 2026 LearnSphere. Learn with purpose.</p>
+            <nav class="footer-links" aria-label="Footer navigation">
+                <a href="student-login.html">Student login</a>
+                <a href="mentor-login.html">Mentor login</a>
+                <a href="admin-login.html">Admin</a>
+            </nav>
+        </div>
+    </footer>
+</body>
+
+</html>

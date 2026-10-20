@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f5f2">
+    <title>Course conversation</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #202a31;
+            --muted: #657179;
+            --paper: #f3f5f2;
+            --surface: #fff;
+            --line: #dce2df;
+            --green: #25715d;
+            --green-soft: #e3f1eb;
+            --coral: #c35c47;
+        }
+        * { box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 28px 20px;
+            background-color: var(--paper);
+            background-image: radial-gradient(#dce3de 0.7px, transparent 0.7px);
+            background-size: 18px 18px;
+            color: var(--ink);
+            font-family: "Segoe UI", sans-serif;
+        }
+        .shell { width: min(900px, 100%); margin: 0 auto; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .back-link { color: var(--green); font-size: 14px; font-weight: 650; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .eyebrow { margin: 0 0 5px; color: var(--coral); font-size: 11px; font-weight: 750; letter-spacing: 1.2px; text-transform: uppercase; }
+        h1 { margin: 0; font-size: clamp(23px, 4vw, 32px); line-height: 1.15; }
+        .presence { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+        .presence::before { width: 8px; height: 8px; border-radius: 50%; background: #73a98a; content: ""; }
+        .chat-panel { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: 0 16px 40px #273b3212; }
+        .chat-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 22px; border-bottom: 1px solid var(--line); }
+        .chat-heading p { margin: 0; color: var(--muted); font-size: 13px; }
+        #messages { display: flex; min-height: 330px; max-height: min(58vh, 600px); flex-direction: column; gap: 14px; overflow-y: auto; padding: 24px clamp(16px, 4vw, 38px); scroll-behavior: smooth; }
+        .message { display: flex; max-width: min(78%, 580px); flex-direction: column; gap: 5px; align-self: flex-start; animation: arrive 180ms ease-out; }
+        .message.mine { align-self: flex-end; align-items: flex-end; }
+        .message-meta { display: flex; gap: 8px; align-items: baseline; color: var(--muted); font-size: 11px; }
+        .message-meta strong { color: var(--ink); font-size: 12px; }
+        .bubble { padding: 11px 14px; border: 1px solid var(--line); border-radius: 4px 14px 14px 14px; background: #f5f7f5; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-wrap; }
+        .mine .bubble { border-color: #cce2d7; border-radius: 14px 4px 14px 14px; background: var(--green-soft); }
+        .empty-state { margin: auto; max-width: 290px; color: var(--muted); text-align: center; }
+        .empty-state strong { display: block; margin-bottom: 6px; color: var(--ink); font-size: 15px; }
+        .composer { padding: 16px 22px 19px; border-top: 1px solid var(--line); background: #fbfcfb; }
+        .composer label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 12px; font-weight: 650; }
+        .compose-row { display: flex; align-items: flex-end; gap: 12px; }
+        textarea { min-height: 48px; max-height: 140px; flex: 1; resize: vertical; padding: 12px 13px; border: 1px solid #cbd5d0; border-radius: 5px; background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; }
+        textarea:focus { border-color: var(--green); outline: 3px solid #25715d25; }
+        button { min-height: 46px; padding: 0 20px; border: 0; border-radius: 5px; background: var(--green); color: white; cursor: pointer; font: inherit; font-size: 14px; font-weight: 700; }
+        button:hover { background: #1d5e4d; }
+        button:disabled, textarea:disabled { cursor: not-allowed; opacity: .58; }
+        #status { min-height: 18px; margin: 8px 0 0; color: var(--coral); font-size: 12px; }
+        @keyframes arrive { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 560px) {
+            body { padding: 18px 12px; }
+            .topbar { margin-bottom: 15px; }
+            .chat-heading { padding: 14px 16px; }
+            #messages { min-height: 48vh; padding: 18px 14px; }
+            .message { max-width: 90%; }
+            .composer { padding: 14px; }
+            .compose-row { align-items: stretch; flex-direction: column; }
+            button { align-self: flex-end; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; }
+        }
+    </style>
+<style>
+
+/* Embedded LearnSphere page design */
+:root{--bg:#f7f2e8;--card:#fffdf8;--ink:#1f2e27;--primary:#2c5a45;--primary-ink:#fbf8f1;--accent:#a94f20;--muted:#59635e;--border:#e6dccb;--radius:16px;--shadow:0 20px 50px -24px rgba(44,90,69,.45)}
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:1040px;padding:48px 24px 80px;background:var(--bg);color:var(--ink);font:16px/1.6 "Manrope",system-ui,sans-serif;animation:fade .6s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;color:var(--primary);line-height:1.15;margin:0 0 .5em}
+h1{font-size:3.2rem;margin-bottom:.3em}
+h1::before{content:"LearnSphere.";display:block;font-size:1rem;letter-spacing:0;text-transform:uppercase;color:var(--accent);font-family:"Manrope",sans-serif;font-weight:700;margin-bottom:12px}
+h2{font-size:1.7rem;margin-top:1.4em}
+h3{font-size:1.2rem}
+p{color:var(--muted);margin:.4em 0}
+strong{color:var(--ink)}
+a{color:var(--accent);font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
+hr{border:0;border-top:1px solid var(--border);margin:32px 0}
+br+br{display:none}
+button,input[type=submit]{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:12px 24px;border:0;border-radius:999px;background:var(--primary);color:var(--primary-ink);font:600 15px "Manrope",sans-serif;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s,background .2s}
+button:hover{transform:translateY(-2px);background:var(--accent)}
+button:disabled{opacity:.75;cursor:not-allowed;transform:none}
+label{display:block;font-weight:600;font-size:14px;margin:18px 0 6px;color:var(--ink)}
+input,select,textarea{width:100%;max-width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--ink);font:15px "Manrope",sans-serif;transition:border .2s,box-shadow .2s}
+textarea{border-radius:var(--radius);resize:vertical}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 4px rgba(44,90,69,.15)}
+form{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;margin:16px 0}
+form br{display:none}
+form button[type=submit]{margin-top:24px}
+/* Cards for lists loaded by script */
+#courseContainer>div,#courses>section,#contentContainer>div,#certificatesContainer>div,.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+#courseContainer>div:hover,#courses>section:hover,#contentContainer>div:hover,#certificatesContainer>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+#courses>section hr{display:none}
+#courseContainer>div h2,#courses>section h2{margin-top:0;font-size:1.35rem}
+#message{font-weight:600;color:var(--accent)}
+#studentInfo,#mentorInfo{display:inline-block;padding:6px 16px;border-radius:999px;background:var(--primary);color:var(--primary-ink);font-weight:600}
+img{border-radius:8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden}
+th,td{padding:12px 16px;border-bottom:1px solid var(--border);text-align:left}
+th{background:var(--primary);color:var(--primary-ink)}
+@media(max-width:600px){body{padding:28px 16px}form{padding:20px}button{width:100%;justify-content:center}}
+
+#courseContainer{display:grid;gap:16px}
+#courseContainer>h2{margin-bottom:0}
+#courseContainer>div{margin:0}
+[id$=Container]>div,[id$=List]>div{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+[id$=Container]>div:hover,[id$=List]>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+
+/* Student-page layouts */
+html{color-scheme:light}body{display:block;min-height:100vh;letter-spacing:0}
+[hidden]{display:none!important}h1,h2,h3,p,a,legend{overflow-wrap:anywhere}
+button{max-width:100%;white-space:normal;justify-content:center;text-align:center;line-height:1.4}
+:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+input[type=radio],input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;padding:0;accent-color:var(--primary)}
+#studentInfo:empty{display:none}
+.header{display:flex;justify-content:space-between;align-items:center;gap:20px;background:transparent;color:var(--ink);padding:0 0 24px;border-bottom:1px solid var(--border)}
+.header h1{font-size:2.8rem;margin:0}.header .logout-btn{width:auto;margin:0;background:var(--primary);color:var(--primary-ink)}
+.container{padding:0;width:auto;background:transparent;box-shadow:none;border-radius:0}
+.welcome{padding:28px 0;margin:12px 0 24px;background:transparent;border-bottom:1px solid var(--border);box-shadow:none;border-radius:0}
+.welcome h2{margin:0 0 16px}.welcome p{margin:8px 0}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.cards .card{margin:0;text-align:left;display:flex;flex-direction:column;padding:26px;border-radius:16px;box-shadow:none}
+.cards .card h3{font-size:1.4rem;margin:0 0 12px}.cards .card p{flex:1;margin-bottom:22px}
+.cards .card button{width:100%;margin:0;background:var(--primary);color:var(--primary-ink)}
+.cards .card button:hover,.header .logout-btn:hover{background:var(--accent)}
+#requests,#certificateContainer:has(>section){display:grid;gap:20px;margin-top:28px}
+#requests>section,#certificateContainer>section{padding:28px;background:var(--card);border:1px solid var(--border);border-radius:16px}
+#requests>section h2,#certificateContainer>section h2{margin:0 0 16px}#requests>section hr{display:none}
+#requests>section p{margin:8px 0}#requests>section strong{color:var(--primary)}
+header{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
+#contentNumber{font-size:.85rem;font-weight:700;color:var(--accent);margin-bottom:10px}
+#contentTitle{margin-top:0}#contentText{white-space:pre-wrap;line-height:1.85;font-size:1.06rem;max-width:75ch;padding:16px 0 28px}
+#testForm{padding:0;background:transparent;border:0;border-radius:0}
+.question{border:0;border-top:1px solid var(--border);padding:24px 0;margin:20px 0;min-width:0}
+.question legend{font-weight:700;padding:0 0 12px;max-width:100%}.choice{display:flex;align-items:center;gap:10px;padding:12px 16px;margin:8px 0;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer}
+.choice:has(input:checked){border-color:var(--primary);background:var(--bg)}
+#completed{border-top:2px solid var(--primary);padding-top:24px}
+#courseContainer{display:block}#courseContainer h2{margin-top:0}#courseContainer h3{margin-top:28px}
+#submissionSection{padding:8px 0}#submissionSection h2{margin-top:0}#submissionSection input{width:100%!important;max-width:600px}
+#submissionMessage,#certificateMessage,#message{min-height:1.5em;margin:18px 0;font-weight:600}#submissionMessage:empty,#certificateMessage:empty,#message:empty{margin:0;min-height:0}
+#certificateContainer{margin-top:28px}#certificateContainer>div{border:3px double var(--primary)!important;border-radius:0;padding:40px!important;box-shadow:none;transform:none;background:var(--card)}
+#certificateContainer>div h1{font-size:2rem;margin:20px 0}#certificateContainer>div h1::before{content:none}
+#certificateContainer>div h2{margin:20px 0;font-size:1.8rem}#certificateContainer>div>div{gap:24px;flex-wrap:wrap}
+#certificateContainer img{max-width:100%!important;object-fit:contain}
+body.login-page{max-width:520px;padding-top:72px}.login-page .container{width:100%;padding:0}
+.login-page h2{text-align:left;font-size:2.8rem;margin:0 0 28px}
+.login-page h2::before{content:'LearnSphere.';display:block;font:700 1rem 'Manrope',sans-serif;color:var(--accent);margin-bottom:16px}
+.login-page form{padding:28px;margin-bottom:24px}.login-page button{width:100%;margin:24px 0 0}
+.login-page .register-link{text-align:center;margin-top:20px}.login-page .register-link a{color:var(--accent)}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){h1{font-size:2.2rem}.header{align-items:flex-start}.header h1{font-size:2rem}.header .logout-btn{padding:10px 16px}.cards{grid-template-columns:1fr}.container{padding:0}.header{padding:0 0 20px}.welcome{padding:20px 0}.cards .card{padding:22px}#certificateContainer>div{padding:22px 16px!important}#certificateContainer>div h1{font-size:1.5rem}#certificateContainer>div h2{font-size:1.4rem}.login-page h2{font-size:2.2rem}body.login-page{padding-top:40px}}
+@media(prefers-reduced-motion:reduce){body{animation:none}*{transition:none!important;scroll-behavior:auto!important}}
+@media print{body{max-width:none;padding:0;background:var(--card);animation:none}body>h1,body>button,#certificateContainer>button{display:none!important}#certificateContainer{margin:0}#certificateContainer>div{break-inside:avoid;border-color:var(--primary)!important}#certificateContainer br{display:none}}
+
+</style><style>img{max-width:100%;border-radius:12px}textarea{width:100%;box-sizing:border-box}</style>
+</head>
+<body>
+    <main class="shell">
+        <nav class="topbar" aria-label="Page navigation">
+            <a class="back-link" id="backLink" href="courses.html">&#8592; Back</a>
+            <span class="presence" id="presence">Connecting</span>
+        </nav>
+        <header style="margin-bottom: 20px">
+            <p class="eyebrow">Your learning space</p>
+            <h1 id="title">Course conversation</h1>
+        </header>
+        <section class="chat-panel" aria-label="Course chat">
+            <div class="chat-heading">
+                <p id="subtitle">Messages between you and your course mentor</p>
+                <p id="syncLabel">Live updates</p>
+            </div>
+            <div id="messages" role="log" aria-live="polite" aria-relevant="additions text">
+                <p class="empty-state">Loading conversation...</p>
+            </div>
+            <form class="composer" id="messageForm">
+                <label for="message">Write a message</label>
+                <div class="compose-row">
+                    <textarea id="message" rows="2" maxlength="5000" placeholder="Ask a question or share an update..." required></textarea>
+                    <button id="sendButton" type="submit">Send message</button>
+                </div>
+                <p id="status" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+    </main>
+    <script>
+        const params = new URLSearchParams(location.search);
+        const courseId = params.get("courseId");
+        const targetStudentId = params.get("studentId");
+        const studentId = localStorage.getItem("studentId");
+        let mentor = null;
+        try {
+            mentor = JSON.parse(localStorage.getItem("mentor") || "null");
+        } catch (error) {
+            localStorage.removeItem("mentor");
+        }
+        const isMentor = params.get("role") === "mentor";
+        const actorId = isMentor ? mentor && mentor.id : studentId;
+        const actorRole = isMentor ? "MENTOR" : "STUDENT";
+        const hasValidContext = Boolean(
+            courseId &&
+            (isMentor ? mentor && targetStudentId : actorId)
+        );
+        const messagesContainer = document.getElementById("messages");
+        const statusLabel = document.getElementById("status");
+        const messageInput = document.getElementById("message");
+        const sendButton = document.getElementById("sendButton");
+        const presence = document.getElementById("presence");
+        let courseMentorId = null;
+        let isRefreshing = false;
+
+        async function responseError(response, fallback) {
+            const body = await response.text();
+            if (response.status === 401) {
+                return "Your sign-in session has expired. Please sign in again.";
+            }
+            if (response.status === 403) {
+                return "You are not authorized for this student/course conversation. Please reopen the chat from your enrolled-students or course page.";
+            }
+            try {
+                const details = JSON.parse(body);
+                return details.detail || details.message || `${fallback} (HTTP ${response.status}).`;
+            } catch (error) {
+                return body || `${fallback} (HTTP ${response.status}).`;
+            }
+        }
+
+        document.getElementById("backLink").href = isMentor ? "mentor-enrolled-students.html" : "courses.html";
+        document.getElementById("subtitle").textContent = isMentor
+            ? "Messages with your enrolled student"
+            : "Messages between you and your course mentor";
+
+        function showEmptyState(title, detail) {
+            const state = document.createElement("p");
+            state.className = "empty-state";
+            const heading = document.createElement("strong");
+            heading.textContent = title;
+            state.append(heading, document.createTextNode(detail));
+            messagesContainer.replaceChildren(state);
+        }
+
+        async function refreshMessages() {
+            if (!hasValidContext || isRefreshing) return;
+            isRefreshing = true;
+            const shouldScroll = messagesContainer.scrollHeight - messagesContainer.scrollTop - messagesContainer.clientHeight < 80;
+            const identity = new URLSearchParams(isMentor
+                ? { mentorId: actorId, studentId: targetStudentId }
+                : { studentId: actorId });
+            try {
+                const response = await fetch(`/api/course-chat/course/${encodeURIComponent(courseId)}?${identity}`, {
+                    credentials: "same-origin"
+                });
+                if (!response.ok) throw new Error(await responseError(response, "Conversation could not be loaded"));
+                const messages = await response.json();
+                const fragment = document.createDocumentFragment();
+                if (!messages.length) {
+                    showEmptyState("Start the conversation", "Send a message to begin chatting about this course.");
+                } else {
+                    messages.forEach(item => {
+                        const row = document.createElement("article");
+                        const isOwnMessage = item.senderRole === actorRole && String(item.senderId) === String(actorId);
+                        row.className = `message${isOwnMessage ? " mine" : ""}`;
+                        const meta = document.createElement("div");
+                        meta.className = "message-meta";
+                        const sender = document.createElement("strong");
+                        sender.textContent = isOwnMessage ? "You" : item.senderRole;
+                        const time = document.createElement("time");
+                        const sentAt = new Date(item.sentAt);
+                        time.dateTime = sentAt.toISOString();
+                        time.textContent = sentAt.toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+                        const bubble = document.createElement("div");
+                        bubble.className = "bubble";
+                        bubble.textContent = item.message;
+                        meta.append(sender, time);
+                        row.append(meta, bubble);
+                        fragment.appendChild(row);
+                    });
+                    messagesContainer.replaceChildren(fragment);
+                    if (shouldScroll) messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+                presence.textContent = "Connected";
+                statusLabel.textContent = "";
+            } catch (error) {
+                console.error("Unable to refresh the conversation.", error);
+                presence.textContent = "Offline";
+                statusLabel.textContent = error.message || "Unable to refresh messages. Check your connection and try again.";
+                if (!messagesContainer.querySelector(".message")) {
+                    showEmptyState("Conversation unavailable", error.message || "Chat requires an active enrollment and the course mentor.");
+                }
+            } finally {
+                isRefreshing = false;
+            }
+        }
+
+        async function loadCourseMentor() {
+            try {
+                const response = await fetch(`/api/courses/${encodeURIComponent(courseId)}`, {
+                    credentials: "same-origin"
+                });
+                if (!response.ok) {
+                    throw new Error(await responseError(response, "Course details could not be loaded"));
+                }
+                const course = await response.json();
+                courseMentorId = course.mentorId;
+                document.getElementById("title").textContent = course.courseName || "Course conversation";
+                document.title = `${course.courseName || "Course"} · Chat`;
+                if (isMentor && String(courseMentorId) !== String(actorId)) {
+                    throw new Error("This course is not assigned to the signed-in mentor.");
+                }
+                return true;
+            } catch (error) {
+                console.error("Unable to load the course for chat.", error);
+                statusLabel.textContent = error.message || "Course details could not be loaded.";
+                return false;
+            }
+        }
+
+        document.getElementById("messageForm").addEventListener("submit", async event => {
+            event.preventDefault();
+            const messageText = messageInput.value.trim();
+            if (!messageText || !hasValidContext || !courseMentorId) return;
+            const body = {
+                senderId: Number(actorId),
+                senderRole: isMentor ? "MENTOR" : "STUDENT",
+                receiverId: Number(isMentor ? targetStudentId : courseMentorId),
+                courseId: Number(courseId),
+                message: messageText
+            };
+            if (!body.receiverId) {
+                statusLabel.textContent = "Unable to identify the course chat participant.";
+                return;
+            }
+            sendButton.disabled = true;
+            statusLabel.textContent = "";
+            try {
+                const response = await fetch("/api/course-chat", {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
+                if (!response.ok) throw new Error(await responseError(response, "Message could not be sent"));
+                messageInput.value = "";
+                await refreshMessages();
+            } catch (error) {
+                console.error("Unable to send chat message.", error);
+                statusLabel.textContent = error.message || "Message could not be sent. Please try again.";
+            } finally {
+                sendButton.disabled = false;
+            }
+        });
+
+        if (!hasValidContext) {
+            const missingContext = isMentor
+                ? "Open this chat from an enrolled student page so the student ID is included."
+                : "Please open this conversation from a course page while logged in.";
+            statusLabel.textContent = "A course and valid chat participant are required.";
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+            presence.textContent = "Unavailable";
+            showEmptyState("Chat unavailable", missingContext);
+        } else {
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+            (async () => {
+                if (!await loadCourseMentor()) return;
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                await refreshMessages();
+                window.setInterval(refreshMessages, 5000);
+            })();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mentor Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;600;700&display=swap">
+<style>
+/* LearnSphere shared styles — link this in every page */
+:root{--bg:#f7f2e8;--card:#fffdf8;--ink:#1f2e27;--primary:#2c5a45;--primary-ink:#fbf8f1;--accent:#a94f20;--muted:#59635e;--border:#e6dccb;--radius:16px;--shadow:0 20px 50px -24px rgba(44,90,69,.45)}
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:1040px;padding:48px 24px 80px;background:var(--bg);color:var(--ink);font:16px/1.6 "Manrope",system-ui,sans-serif;animation:fade .6s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;color:var(--primary);line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);margin-bottom:.3em}
+h1::before{content:"LearnSphere.";display:block;font-size:1rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-family:"Manrope",sans-serif;font-weight:700;margin-bottom:12px}
+h2{font-size:1.7rem;margin-top:1.4em}
+h3{font-size:1.2rem}
+p{color:var(--muted);margin:.4em 0}
+strong{color:var(--ink)}
+a{color:var(--accent);font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
+hr{border:0;border-top:1px solid var(--border);margin:32px 0}
+br+br{display:none}
+button,input[type=submit]{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:12px 24px;border:0;border-radius:999px;background:var(--primary);color:var(--primary-ink);font:600 15px "Manrope",sans-serif;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s,background .2s}
+button:hover{transform:translateY(-2px);background:var(--accent)}
+button:disabled{opacity:.75;cursor:not-allowed;transform:none}
+label{display:block;font-weight:600;font-size:14px;margin:18px 0 6px;color:var(--ink)}
+input,select,textarea{width:100%;max-width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--ink);font:15px "Manrope",sans-serif;transition:border .2s,box-shadow .2s}
+textarea{border-radius:var(--radius);resize:vertical}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 4px rgba(44,90,69,.15)}
+form{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;margin:16px 0}
+form br{display:none}
+form button[type=submit]{margin-top:24px}
+/* Cards for lists loaded by script */
+#courseContainer>div,#courses>section,#contentContainer>div,#certificatesContainer>div,.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+#courseContainer>div:hover,#courses>section:hover,#contentContainer>div:hover,#certificatesContainer>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+#courses>section hr{display:none}
+#courseContainer>div h2,#courses>section h2{margin-top:0;font-size:1.35rem}
+#message{font-weight:600;color:var(--accent)}
+#studentInfo,#mentorInfo{display:inline-block;padding:6px 16px;border-radius:999px;background:var(--primary);color:var(--primary-ink);font-weight:600}
+img{border-radius:8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden}
+th,td{padding:12px 16px;border-bottom:1px solid var(--border);text-align:left}
+th{background:var(--primary);color:var(--primary-ink)}
+@media(max-width:600px){body{padding:28px 16px}form{padding:20px}button{width:100%;justify-content:center}}
+
+#courseContainer{display:grid;gap:16px}
+#courseContainer>h2{margin-bottom:0}
+#courseContainer>div{margin:0}
+[id$=Container]>div,[id$=List]>div{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+[id$=Container]>div:hover,[id$=List]>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+</style>
+</head>
+
+<body>
+
+    <h1>Mentor Dashboard</h1>
+
+    <p id="welcomeMessage"></p>
+
+    <hr>
+
+    <h2>My Profile</h2>
+
+    <button onclick="window.location.href='mentor-profile.html'">
+        View My Profile
+    </button>
+
+    <hr>
+
+    <h2>Evaluation Test</h2>
+
+    <p>
+        Complete the evaluation process to become available
+        to students.
+    </p>
+
+    <h3>Evaluation Progress</h3>
+
+    <p id="mcqStatus">
+        MCQ Test: Checking...
+    </p>
+
+    <p id="programmingStatus">
+        Programming Test: Checking...
+    </p>
+
+    <p id="profileStatus">
+        GitHub + LinkedIn Analysis: In Progress
+    </p>
+
+    <p id="finalScore">
+        Final Score: Pending until all three rounds are complete
+    </p>
+
+    <hr>
+
+    <button id="mcqButton"
+            onclick="window.location.href='mentor-mcq.html'">
+        MCQ Test
+    </button>
+
+    <br><br>
+
+    <button id="programmingButton"
+            onclick="window.location.href='mentor-programming.html'"
+            disabled>
+        Programming Test
+    </button>
+
+    <br><br>
+
+    <button onclick="window.location.href='mentor-evaluation.html'">
+        View Evaluation Progress
+    </button>
+
+    <hr>
+
+    <h2>Evaluation Status</h2>
+
+    <p id="overallStatus">
+        Overall Status: Evaluation In Progress
+    </p>
+
+    <hr>
+
+    <h2>Student Requests</h2>
+
+    <button onclick="window.location.href='student-requests.html'">
+        Student Requests
+    </button>
+
+    <br><br>
+
+    <button onclick="window.location.href='mentor-quality.html'">
+        Mentor Feedback & Quality
+    </button>
+
+    <br><br>
+
+    <button onclick="window.location.href='mentor-project-review.html'">
+        Review Student Projects
+    </button>
+
+    <br><br>
+
+    <hr>
+
+    <hr>
+    <h2>Courses</h2>
+
+    <button onclick="window.location.href='mentor-courses.html'">
+        My Courses
+    </button>
+
+    <button onclick="window.location.href='mentor-enrolled-students.html'">
+        Enrolled Students
+    </button>
+
+    <button onclick="logout()">
+        Logout
+    </button>
+
+
+<script>
+
+const mentor = JSON.parse(localStorage.getItem("mentor"));
+
+if (!mentor) {
+
+    alert("Please login first.");
+
+    window.location.href = "mentor-login.html";
+
+}
+
+
+document.getElementById("welcomeMessage").textContent =
+    "Welcome, " + mentor.fullName + "!";
+
+
+async function checkEvaluationProgress() {
+
+    let programmingCompleted = false;
+
+    try {
+
+        /*
+         * Check whether the mentor has completed
+         * the MCQ test.
+         */
+
+        const mcqResponse =
+            await fetch(`/api/mcq/results/mentor/${mentor.id}`);
+
+
+        if (mcqResponse.ok) {
+
+            const mcqResult =
+                await mcqResponse.json();
+
+            document.getElementById("mcqStatus").textContent =
+                "MCQ Test: Completed ✓ - " +
+                mcqResult.percentage + "%";
+
+
+            /*
+             * MCQ completed, so programming test
+             * becomes available.
+             */
+
+            document.getElementById("programmingButton")
+                .disabled = false;
+
+
+            const programmingResponse = await fetch(
+                `/api/programming/results/mentor/${mentor.id}`
+            );
+            const programmingResults = programmingResponse.ok
+                ? await programmingResponse.json()
+                : [];
+            programmingCompleted = programmingResults.length > 0;
+            document.getElementById("programmingStatus").textContent =
+                programmingCompleted
+                    ? "Programming Test: Completed ✓ - "
+                        + programmingResults[0].percentage + "%"
+                    : "Programming Test: Available";
+
+        }
+
+        else {
+
+            document.getElementById("mcqStatus").textContent =
+                "MCQ Test: Not Completed";
+
+            document.getElementById("programmingStatus").textContent =
+                "Programming Test: Locked - Complete MCQ first";
+
+        }
+
+        const evaluationResponse = await fetch(
+            `/api/mentor-evaluations/mentor/${mentor.id}`
+        );
+        if (evaluationResponse.ok) {
+            const evaluation = await evaluationResponse.json();
+            document.getElementById("profileStatus").textContent =
+                "Round 3: Completed - GitHub " + evaluation.githubScore
+                    + "/60, LinkedIn " + evaluation.linkedinScore + "/40";
+            document.getElementById("finalScore").textContent =
+                "Final Score: " + evaluation.finalScore + " / 100";
+            document.getElementById("overallStatus").textContent =
+                "Overall Status: " + evaluation.status;
+        } else {
+            document.getElementById("profileStatus").textContent =
+                "Round 3: Pending Admin Review";
+            document.getElementById("overallStatus").textContent =
+                "Overall Status: Evaluation In Progress";
+        }
+
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById("mcqStatus").textContent =
+            "MCQ Test: Unable to check status";
+
+        document.getElementById("programmingStatus").textContent =
+            "Programming Test: Locked";
+
+    }
+
+}
+
+
+async function logout() {
+
+    await fetch("/api/mentors/logout", { method: "POST" });
+
+    localStorage.removeItem("mentor");
+
+    window.location.href = "mentor-login.html";
+
+}
+
+
+checkEvaluationProgress();
+
+</script>
+
+</body>
+
+</html>

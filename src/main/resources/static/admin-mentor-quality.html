@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Quality Monitoring</title>
+<style>
+
+/* Embedded LearnSphere page design */
+:root{--bg:#f7f2e8;--card:#fffdf8;--ink:#1f2e27;--primary:#2c5a45;--primary-ink:#fbf8f1;--accent:#a94f20;--muted:#59635e;--border:#e6dccb;--radius:16px;--shadow:0 20px 50px -24px rgba(44,90,69,.45)}
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:1040px;padding:48px 24px 80px;background:var(--bg);color:var(--ink);font:16px/1.6 "Manrope",system-ui,sans-serif;animation:fade .6s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;color:var(--primary);line-height:1.15;margin:0 0 .5em}
+h1{font-size:3.2rem;margin-bottom:.3em}
+h1::before{content:"LearnSphere.";display:block;font-size:1rem;letter-spacing:0;text-transform:uppercase;color:var(--accent);font-family:"Manrope",sans-serif;font-weight:700;margin-bottom:12px}
+h2{font-size:1.7rem;margin-top:1.4em}
+h3{font-size:1.2rem}
+p{color:var(--muted);margin:.4em 0}
+strong{color:var(--ink)}
+a{color:var(--accent);font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
+hr{border:0;border-top:1px solid var(--border);margin:32px 0}
+br+br{display:none}
+button,input[type=submit]{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:12px 24px;border:0;border-radius:999px;background:var(--primary);color:var(--primary-ink);font:600 15px "Manrope",sans-serif;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s,background .2s}
+button:hover{transform:translateY(-2px);background:var(--accent)}
+button:disabled{opacity:.75;cursor:not-allowed;transform:none}
+label{display:block;font-weight:600;font-size:14px;margin:18px 0 6px;color:var(--ink)}
+input,select,textarea{width:100%;max-width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--ink);font:15px "Manrope",sans-serif;transition:border .2s,box-shadow .2s}
+textarea{border-radius:var(--radius);resize:vertical}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 4px rgba(44,90,69,.15)}
+form{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;margin:16px 0}
+form br{display:none}
+form button[type=submit]{margin-top:24px}
+/* Cards for lists loaded by script */
+#courseContainer>div,#courses>section,#contentContainer>div,#certificatesContainer>div,.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+#courseContainer>div:hover,#courses>section:hover,#contentContainer>div:hover,#certificatesContainer>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+#courses>section hr{display:none}
+#courseContainer>div h2,#courses>section h2{margin-top:0;font-size:1.35rem}
+#message{font-weight:600;color:var(--accent)}
+#studentInfo,#mentorInfo{display:inline-block;padding:6px 16px;border-radius:999px;background:var(--primary);color:var(--primary-ink);font-weight:600}
+img{border-radius:8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden}
+th,td{padding:12px 16px;border-bottom:1px solid var(--border);text-align:left}
+th{background:var(--primary);color:var(--primary-ink)}
+@media(max-width:600px){body{padding:28px 16px}form{padding:20px}button{width:100%;justify-content:center}}
+
+#courseContainer{display:grid;gap:16px}
+#courseContainer>h2{margin-bottom:0}
+#courseContainer>div{margin:0}
+[id$=Container]>div,[id$=List]>div{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+[id$=Container]>div:hover,[id$=List]>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+
+/* Student-page layouts */
+html{color-scheme:light}body{display:block;min-height:100vh;letter-spacing:0}
+[hidden]{display:none!important}h1,h2,h3,p,a,legend{overflow-wrap:anywhere}
+button{max-width:100%;white-space:normal;justify-content:center;text-align:center;line-height:1.4}
+:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+input[type=radio],input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;padding:0;accent-color:var(--primary)}
+#studentInfo:empty{display:none}
+.header{display:flex;justify-content:space-between;align-items:center;gap:20px;background:transparent;color:var(--ink);padding:0 0 24px;border-bottom:1px solid var(--border)}
+.header h1{font-size:2.8rem;margin:0}.header .logout-btn{width:auto;margin:0;background:var(--primary);color:var(--primary-ink)}
+.container{padding:0;width:auto;background:transparent;box-shadow:none;border-radius:0}
+.welcome{padding:28px 0;margin:12px 0 24px;background:transparent;border-bottom:1px solid var(--border);box-shadow:none;border-radius:0}
+.welcome h2{margin:0 0 16px}.welcome p{margin:8px 0}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.cards .card{margin:0;text-align:left;display:flex;flex-direction:column;padding:26px;border-radius:16px;box-shadow:none}
+.cards .card h3{font-size:1.4rem;margin:0 0 12px}.cards .card p{flex:1;margin-bottom:22px}
+.cards .card button{width:100%;margin:0;background:var(--primary);color:var(--primary-ink)}
+.cards .card button:hover,.header .logout-btn:hover{background:var(--accent)}
+#requests,#certificateContainer:has(>section){display:grid;gap:20px;margin-top:28px}
+#requests>section,#certificateContainer>section{padding:28px;background:var(--card);border:1px solid var(--border);border-radius:16px}
+#requests>section h2,#certificateContainer>section h2{margin:0 0 16px}#requests>section hr{display:none}
+#requests>section p{margin:8px 0}#requests>section strong{color:var(--primary)}
+header{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
+#contentNumber{font-size:.85rem;font-weight:700;color:var(--accent);margin-bottom:10px}
+#contentTitle{margin-top:0}#contentText{white-space:pre-wrap;line-height:1.85;font-size:1.06rem;max-width:75ch;padding:16px 0 28px}
+#testForm{padding:0;background:transparent;border:0;border-radius:0}
+.question{border:0;border-top:1px solid var(--border);padding:24px 0;margin:20px 0;min-width:0}
+.question legend{font-weight:700;padding:0 0 12px;max-width:100%}.choice{display:flex;align-items:center;gap:10px;padding:12px 16px;margin:8px 0;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer}
+.choice:has(input:checked){border-color:var(--primary);background:var(--bg)}
+#completed{border-top:2px solid var(--primary);padding-top:24px}
+#courseContainer{display:block}#courseContainer h2{margin-top:0}#courseContainer h3{margin-top:28px}
+#submissionSection{padding:8px 0}#submissionSection h2{margin-top:0}#submissionSection input{width:100%!important;max-width:600px}
+#submissionMessage,#certificateMessage,#message{min-height:1.5em;margin:18px 0;font-weight:600}#submissionMessage:empty,#certificateMessage:empty,#message:empty{margin:0;min-height:0}
+#certificateContainer{margin-top:28px}#certificateContainer>div{border:3px double var(--primary)!important;border-radius:0;padding:40px!important;box-shadow:none;transform:none;background:var(--card)}
+#certificateContainer>div h1{font-size:2rem;margin:20px 0}#certificateContainer>div h1::before{content:none}
+#certificateContainer>div h2{margin:20px 0;font-size:1.8rem}#certificateContainer>div>div{gap:24px;flex-wrap:wrap}
+#certificateContainer img{max-width:100%!important;object-fit:contain}
+body.login-page{max-width:520px;padding-top:72px}.login-page .container{width:100%;padding:0}
+.login-page h2{text-align:left;font-size:2.8rem;margin:0 0 28px}
+.login-page h2::before{content:'LearnSphere.';display:block;font:700 1rem 'Manrope',sans-serif;color:var(--accent);margin-bottom:16px}
+.login-page form{padding:28px;margin-bottom:24px}.login-page button{width:100%;margin:24px 0 0}
+.login-page .register-link{text-align:center;margin-top:20px}.login-page .register-link a{color:var(--accent)}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){h1{font-size:2.2rem}.header{align-items:flex-start}.header h1{font-size:2rem}.header .logout-btn{padding:10px 16px}.cards{grid-template-columns:1fr}.container{padding:0}.header{padding:0 0 20px}.welcome{padding:20px 0}.cards .card{padding:22px}#certificateContainer>div{padding:22px 16px!important}#certificateContainer>div h1{font-size:1.5rem}#certificateContainer>div h2{font-size:1.4rem}.login-page h2{font-size:2.2rem}body.login-page{padding-top:40px}}
+@media(prefers-reduced-motion:reduce){body{animation:none}*{transition:none!important;scroll-behavior:auto!important}}
+@media print{body{max-width:none;padding:0;background:var(--card);animation:none}body>h1,body>button,#certificateContainer>button{display:none!important}#certificateContainer{margin:0}#certificateContainer>div{break-inside:avoid;border-color:var(--primary)!important}#certificateContainer br{display:none}}
+
+</style><style>img{max-width:100%;border-radius:12px}textarea{width:100%;box-sizing:border-box}</style>
+</head>
+<body>
+    <h1>Mentor Quality Monitoring</h1>
+    <p>Ongoing student feedback is shown separately from initial evaluation scores.</p>
+    <div id="quality">Loading mentor quality...</div>
+    <p><a href="admin-dashboard.html">Back to Dashboard</a></p>
+    <script>
+        if (!localStorage.getItem("admin")) location.href = "admin-login.html";
+        async function loadQuality() {
+            const container = document.getElementById("quality");
+            const response = await fetch("/api/mentor-feedback/admin/quality");
+            if (!response.ok) {
+                container.textContent = "Unable to load mentor quality.";
+                return;
+            }
+            const records = await response.json();
+            container.replaceChildren();
+            records.forEach(record => {
+                const section = document.createElement("section");
+                section.innerHTML = `<hr><h2>${record.mentorName}</h2>
+                    <p>Courses: ${record.courseCount} · Enrolled students: ${record.enrolledStudentCount}</p>
+                    <p>Student feedback: ${record.averageRating} / 5 (${record.reviewCount} reviews)</p>
+                    <p>Quality status: ${record.qualityStatus}</p>
+                    <p>Initial evaluation score: ${record.initialEvaluationScore ?? "Not available"}</p>
+                    <h3>Recent feedback</h3>`;
+                record.recentFeedback.forEach(feedback => {
+                    const item = document.createElement("p");
+                    item.textContent = `${feedback.rating}/5 · ${feedback.comment || "No comment"} · ${new Date(feedback.createdAt).toLocaleDateString()}`;
+                    section.appendChild(item);
+                });
+                container.appendChild(section);
+            });
+        }
+        loadQuality();
+    </script>
+</body>
+</html>

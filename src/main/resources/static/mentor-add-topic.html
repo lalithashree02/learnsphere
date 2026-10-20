@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Course Content</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;600;700&display=swap">
+<style>
+/* LearnSphere shared styles — link this in every page */
+:root{--bg:#f7f2e8;--card:#fffdf8;--ink:#1f2e27;--primary:#2c5a45;--primary-ink:#fbf8f1;--accent:#a94f20;--muted:#59635e;--border:#e6dccb;--radius:16px;--shadow:0 20px 50px -24px rgba(44,90,69,.45)}
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:1040px;padding:48px 24px 80px;background:var(--bg);color:var(--ink);font:16px/1.6 "Manrope",system-ui,sans-serif;animation:fade .6s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;color:var(--primary);line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);margin-bottom:.3em}
+h1::before{content:"LearnSphere.";display:block;font-size:1rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-family:"Manrope",sans-serif;font-weight:700;margin-bottom:12px}
+h2{font-size:1.7rem;margin-top:1.4em}
+h3{font-size:1.2rem}
+p{color:var(--muted);margin:.4em 0}
+strong{color:var(--ink)}
+a{color:var(--accent);font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
+hr{border:0;border-top:1px solid var(--border);margin:32px 0}
+br+br{display:none}
+button,input[type=submit]{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:12px 24px;border:0;border-radius:999px;background:var(--primary);color:var(--primary-ink);font:600 15px "Manrope",sans-serif;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s,background .2s}
+button:hover{transform:translateY(-2px);background:var(--accent)}
+button:disabled{opacity:.75;cursor:not-allowed;transform:none}
+label{display:block;font-weight:600;font-size:14px;margin:18px 0 6px;color:var(--ink)}
+input,select,textarea{width:100%;max-width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--ink);font:15px "Manrope",sans-serif;transition:border .2s,box-shadow .2s}
+textarea{border-radius:var(--radius);resize:vertical}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 4px rgba(44,90,69,.15)}
+form{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;margin:16px 0}
+form br{display:none}
+form button[type=submit]{margin-top:24px}
+/* Cards for lists loaded by script */
+#courseContainer>div,#courses>section,#contentContainer>div,#certificatesContainer>div,.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+#courseContainer>div:hover,#courses>section:hover,#contentContainer>div:hover,#certificatesContainer>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+#courses>section hr{display:none}
+#courseContainer>div h2,#courses>section h2{margin-top:0;font-size:1.35rem}
+#message{font-weight:600;color:var(--accent)}
+#studentInfo,#mentorInfo{display:inline-block;padding:6px 16px;border-radius:999px;background:var(--primary);color:var(--primary-ink);font-weight:600}
+img{border-radius:8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden}
+th,td{padding:12px 16px;border-bottom:1px solid var(--border);text-align:left}
+th{background:var(--primary);color:var(--primary-ink)}
+@media(max-width:600px){body{padding:28px 16px}form{padding:20px}button{width:100%;justify-content:center}}
+
+#courseContainer{display:grid;gap:16px}
+#courseContainer>h2{margin-bottom:0}
+#courseContainer>div{margin:0}
+</style>
+</head>
+
+<body>
+
+    <h1>Manage Course Content</h1>
+
+    <!-- COURSE INFORMATION -->
+    <div id="courseInfo">
+        <p>Loading course...</p>
+    </div>
+
+    <hr>
+
+    <!-- ADD CONTENT -->
+    <h2>Add Content</h2>
+
+    <form id="contentForm">
+
+        <!-- CONTENT TYPE -->
+        <label for="contentType">Content Type:</label>
+        <br>
+
+        <select id="contentType" required>
+            <option value="TEXT">Text Content</option>
+            <option value="QUESTION_TEST">Question / Test</option>
+        </select>
+
+        <br><br>
+
+        <!-- TITLE -->
+        <label for="topicTitle">Content Title:</label>
+        <br>
+
+        <input
+            type="text"
+            id="topicTitle"
+            required
+        >
+
+        <br><br>
+
+        <!-- TEXT CONTENT -->
+        <div id="textSection">
+
+            <label for="content">
+                Learning Material:
+            </label>
+
+            <br>
+
+            <textarea
+                id="content"
+                rows="15"
+                cols="70"
+                placeholder="Enter the learning material here..."
+            ></textarea>
+
+            <br><br>
+
+        </div>
+
+        <!-- QUESTION TEST SECTION -->
+        <div id="testSection" style="display: none;">
+
+            <h3>Test Question</h3>
+
+            <label for="question">
+                Question:
+            </label>
+
+            <br>
+
+            <textarea
+                id="question"
+                rows="4"
+                cols="70"
+                placeholder="Enter the question..."
+            ></textarea>
+
+            <br><br>
+
+            <label for="optionA">
+                Option A:
+            </label>
+
+            <br>
+
+            <input
+                type="text"
+                id="optionA"
+            >
+
+            <br><br>
+
+            <label for="optionB">
+                Option B:
+            </label>
+
+            <br>
+
+            <input
+                type="text"
+                id="optionB"
+            >
+
+            <br><br>
+
+            <label for="optionC">
+                Option C:
+            </label>
+
+            <br>
+
+            <input
+                type="text"
+                id="optionC"
+            >
+
+            <br><br>
+
+            <label for="optionD">
+                Option D:
+            </label>
+
+            <br>
+
+            <input
+                type="text"
+                id="optionD"
+            >
+
+            <br><br>
+
+            <label for="correctAnswer">
+                Correct Answer:
+            </label>
+
+            <br>
+
+            <select id="correctAnswer">
+                <option value="">
+                    Select Correct Answer
+                </option>
+
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+
+            <br><br>
+
+            <label for="marks">
+                Marks:
+            </label>
+
+            <br>
+
+            <input
+                type="number"
+                id="marks"
+                min="1"
+                value="1"
+            >
+
+            <br><br>
+
+        </div>
+
+        <button type="submit">
+            Save & Next
+        </button>
+
+    </form>
+
+    <br>
+
+    <p id="message"></p>
+
+    <hr>
+
+    <!-- EXISTING CONTENT -->
+    <h2>Existing Course Content</h2>
+
+    <div id="contentContainer">
+        <p>Loading content...</p>
+    </div>
+
+    <br>
+
+    <button onclick="goBack()">
+        Back to Dashboard
+    </button>
+
+    <script>
+
+        // ============================================================
+        // GET COURSE ID
+        // ============================================================
+
+        const urlParams =
+            new URLSearchParams(window.location.search);
+
+        const courseId =
+            urlParams.get("courseId");
+
+
+        // ============================================================
+        // GET LOGGED-IN MENTOR
+        // ============================================================
+
+        const mentor =
+            JSON.parse(
+                localStorage.getItem("mentor") || "null"
+            );
+
+
+        // ============================================================
+        // CHECK LOGIN AND COURSE
+        // ============================================================
+
+        if (!mentor) {
+
+            window.location.href =
+                "mentor-login.html";
+
+        } else if (!courseId) {
+
+            document.getElementById("courseInfo")
+                .innerHTML =
+                "<p>Course ID is missing.</p>";
+
+        } else {
+
+            loadCourse();
+            loadContent();
+        }
+
+
+        // ============================================================
+        // LOAD COURSE INFORMATION
+        // ============================================================
+
+        async function loadCourse() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/courses/" + courseId,
+                        {
+                            credentials: "same-origin"
+                        }
+                    );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Course not found"
+                    );
+                }
+
+                const course =
+                    await response.json();
+
+                document.getElementById("courseInfo")
+                    .innerHTML = `
+
+                        <h2>${escapeHtml(course.courseName)}</h2>
+
+                        <p>
+                            <strong>Skill:</strong>
+                            ${escapeHtml(course.skill || "")}
+                        </p>
+
+                        <p>
+                            <strong>Mentor:</strong>
+                            ${escapeHtml(course.mentorName || "")}
+                        </p>
+
+                    `;
+
+            } catch (error) {
+
+                console.error(error);
+
+                document.getElementById("courseInfo")
+                    .innerHTML =
+                    "<p>Unable to load course.</p>";
+            }
+        }
+
+
+        // ============================================================
+        // CHANGE CONTENT TYPE
+        // ============================================================
+
+        document.getElementById("contentType")
+            .addEventListener(
+                "change",
+                function () {
+
+                    const type =
+                        this.value;
+
+                    const textSection =
+                        document.getElementById(
+                            "textSection"
+                        );
+
+                    const testSection =
+                        document.getElementById(
+                            "testSection"
+                        );
+
+                    if (type === "TEXT") {
+
+                        textSection.style.display =
+                            "block";
+
+                        testSection.style.display =
+                            "none";
+
+                        document.getElementById(
+                            "content"
+                        ).required = true;
+
+                        document.getElementById(
+                            "question"
+                        ).required = false;
+
+                    } else {
+
+                        textSection.style.display =
+                            "none";
+
+                        testSection.style.display =
+                            "block";
+
+                        document.getElementById(
+                            "content"
+                        ).required = false;
+
+                        document.getElementById(
+                            "question"
+                        ).required = true;
+                    }
+
+                }
+            );
+
+
+        // ============================================================
+        // ADD CONTENT
+        // ============================================================
+
+        document.getElementById("contentForm")
+            .addEventListener(
+                "submit",
+                async function (event) {
+
+                    event.preventDefault();
+
+                    const contentType =
+                        document.getElementById(
+                            "contentType"
+                        ).value;
+
+                    const topicTitle =
+                        document.getElementById(
+                            "topicTitle"
+                        ).value.trim();
+
+                    const learningContent =
+                        document.getElementById(
+                            "content"
+                        ).value.trim();
+
+
+                    // ------------------------------------------------
+                    // VALIDATE TITLE
+                    // ------------------------------------------------
+
+                    if (!topicTitle) {
+
+                        showMessage(
+                            "Please enter a content title."
+                        );
+
+                        return;
+                    }
+
+
+                    // ------------------------------------------------
+                    // VALIDATE TEXT CONTENT
+                    // ------------------------------------------------
+
+                    if (
+                        contentType === "TEXT"
+                        && !learningContent
+                    ) {
+
+                        showMessage(
+                            "Please enter the learning material."
+                        );
+
+                        return;
+                    }
+
+
+                    try {
+
+                        // =================================================
+                        // STEP 1: CREATE CONTENT
+                        // =================================================
+
+                        const content = {
+
+                            courseId:
+                                Number(courseId),
+
+                            topicTitle:
+                                topicTitle,
+
+                            contentType:
+                                contentType,
+
+                            content:
+                                contentType === "TEXT"
+                                    ? learningContent
+                                    : null
+                        };
+
+
+                        const response =
+                            await fetch(
+                                "/api/course-content?mentorId="
+                                + encodeURIComponent(mentor.id),
+                                {
+                                    method: "POST",
+
+                                    credentials:
+                                        "same-origin",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify(content)
+                                }
+                            );
+
+
+                        // ------------------------------------------------
+                        // CHECK CREATE RESPONSE
+                        // ------------------------------------------------
+
+                        if (!response.ok) {
+
+                            const errorText =
+                                await response.text();
+
+                            console.error(
+                                "Create content error:",
+                                response.status,
+                                errorText
+                            );
+
+                            throw new Error(
+                                errorText ||
+                                "Unable to save content."
+                            );
+                        }
+
+
+                        const savedContent =
+                            await response.json();
+
+                        console.log(
+                            "Content created:",
+                            savedContent
+                        );
+
+
+                        // =================================================
+                        // STEP 2: IF TEXT, FINISH
+                        // =================================================
+
+                        if (contentType === "TEXT") {
+
+                            showMessage(
+                                "Text content added successfully!"
+                            );
+
+                            document.getElementById(
+                                "contentForm"
+                            ).reset();
+
+                            document.getElementById(
+                                "contentType"
+                            ).value = "TEXT";
+
+                            document.getElementById(
+                                "textSection"
+                            ).style.display = "block";
+
+                            document.getElementById(
+                                "testSection"
+                            ).style.display = "none";
+
+                            loadContent();
+
+                            return;
+                        }
+
+
+                        // =================================================
+                        // STEP 3: ADD QUESTION TO CREATED CONTENT
+                        // =================================================
+
+                        const questionData = {
+
+                            question:
+                                document.getElementById(
+                                    "question"
+                                ).value.trim(),
+
+                            optionA:
+                                document.getElementById(
+                                    "optionA"
+                                ).value.trim(),
+
+                            optionB:
+                                document.getElementById(
+                                    "optionB"
+                                ).value.trim(),
+
+                            optionC:
+                                document.getElementById(
+                                    "optionC"
+                                ).value.trim(),
+
+                            optionD:
+                                document.getElementById(
+                                    "optionD"
+                                ).value.trim(),
+
+                            correctAnswer:
+                                document.getElementById(
+                                    "correctAnswer"
+                                ).value,
+
+                            marks:
+                                Number(
+                                    document.getElementById(
+                                        "marks"
+                                    ).value
+                                )
+                        };
+
+
+                        // ------------------------------------------------
+                        // VALIDATE QUESTION
+                        // ------------------------------------------------
+
+                        if (
+                            !questionData.question ||
+                            !questionData.optionA ||
+                            !questionData.optionB ||
+                            !questionData.optionC ||
+                            !questionData.optionD ||
+                            !questionData.correctAnswer ||
+                            questionData.marks <= 0
+                        ) {
+
+                            showMessage(
+                                "Please complete all question fields."
+                            );
+
+                            return;
+                        }
+
+
+                        // =================================================
+                        // SAVE QUESTION
+                        // =================================================
+
+                        const questionResponse =
+                            await fetch(
+                                "/api/course-content/"
+                                + savedContent.id
+                                + "/questions?mentorId="
+                                + encodeURIComponent(mentor.id),
+                                {
+                                    method: "POST",
+
+                                    credentials:
+                                        "same-origin",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify(
+                                            questionData
+                                        )
+                                }
+                            );
+
+
+                        if (!questionResponse.ok) {
+
+                            const errorText =
+                                await questionResponse.text();
+
+                            console.error(
+                                "Question save error:",
+                                questionResponse.status,
+                                errorText
+                            );
+
+                            throw new Error(
+                                errorText ||
+                                "Unable to save question."
+                            );
+                        }
+
+
+                        const savedQuestion =
+                            await questionResponse.json();
+
+                        console.log(
+                            "Question created:",
+                            savedQuestion
+                        );
+
+
+                        // =================================================
+                        // SUCCESS
+                        // =================================================
+
+                        showMessage(
+                            "Question/Test content added successfully!"
+                        );
+
+                        document.getElementById(
+                            "contentForm"
+                        ).reset();
+
+                        document.getElementById(
+                            "contentType"
+                        ).value = "TEXT";
+
+                        document.getElementById(
+                            "textSection"
+                        ).style.display = "block";
+
+                        document.getElementById(
+                            "testSection"
+                        ).style.display = "none";
+
+                        document.getElementById(
+                            "marks"
+                        ).value = 1;
+
+                        loadContent();
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Save error:",
+                            error
+                        );
+
+                        // IMPORTANT:
+                        // Show the actual backend error.
+                        showMessage(
+                            error.message ||
+                            "Unable to save content."
+                        );
+                    }
+
+                }
+            );
+
+
+        // ============================================================
+        // SHOW MESSAGE
+        // ============================================================
+
+        function showMessage(message) {
+
+            document.getElementById(
+                "message"
+            ).innerText = message;
+        }
+
+
+        // ============================================================
+        // LOAD EXISTING COURSE CONTENT
+        // ============================================================
+
+        async function loadContent() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/course-content/course/"
+                        + courseId
+                        + "?mentorId="
+                        + encodeURIComponent(mentor.id),
+                        {
+                            credentials:
+                                "same-origin"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    const errorText =
+                        await response.text();
+
+                    console.error(
+                        "Load content error:",
+                        response.status,
+                        errorText
+                    );
+
+                    throw new Error(
+                        errorText ||
+                        "Unable to load course content"
+                    );
+                }
+
+
+                const contentList =
+                    await response.json();
+
+                displayContent(
+                    contentList
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Load content error:",
+                    error
+                );
+
+                document.getElementById(
+                    "contentContainer"
+                ).innerHTML =
+                    "<p>" +
+                    escapeHtml(
+                        error.message ||
+                        "Unable to load course content."
+                    ) +
+                    "</p>";
+            }
+        }
+
+
+        // ============================================================
+        // DISPLAY EXISTING CONTENT
+        // ============================================================
+
+        function displayContent(contentList) {
+
+            const container =
+                document.getElementById(
+                    "contentContainer"
+                );
+
+            container.innerHTML = "";
+
+
+            if (
+                !contentList ||
+                contentList.length === 0
+            ) {
+
+                container.innerHTML =
+                    "<p>No course content added yet.</p>";
+
+                return;
+            }
+
+
+            contentList.forEach(
+                function (item) {
+
+                    const contentDiv =
+                        document.createElement(
+                            "div"
+                        );
+
+                    const type =
+                        item.contentType ||
+                        "TEXT";
+
+
+                    contentDiv.innerHTML = `
+
+                        <h3>
+                            Content ${item.topicNumber}:
+                            ${escapeHtml(
+                                item.topicTitle || ""
+                            )}
+                        </h3>
+
+                        <p>
+                            <strong>Type:</strong>
+                            ${escapeHtml(type)}
+                        </p>
+
+                        ${
+                            type === "TEXT"
+                            ?
+
+                            `
+                            <p>
+                                ${escapeHtml(
+                                    item.content || ""
+                                ).replace(
+                                    /\n/g,
+                                    "<br>"
+                                )}
+                            </p>
+                            `
+
+                            :
+
+                            `
+                            <p>
+                                <strong>
+                                    Question/Test
+                                </strong>
+                            </p>
+                            `
+                        }
+
+                        <hr>
+
+                    `;
+
+
+                    container.appendChild(
+                        contentDiv
+                    );
+
+                }
+            );
+        }
+
+
+        // ============================================================
+        // ESCAPE HTML
+        // ============================================================
+
+        function escapeHtml(value) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                value;
+
+            return div.innerHTML;
+        }
+
+
+        // ============================================================
+        // BACK BUTTON
+        // ============================================================
+
+        function goBack() {
+
+            window.location.href =
+                "mentor-dashboard.html";
+        }
+
+    </script>
+
+</body>
+
+</html>

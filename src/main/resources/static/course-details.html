@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Course Details</title>
+<style>
+
+/* Embedded LearnSphere page design */
+:root{--bg:#f7f2e8;--card:#fffdf8;--ink:#1f2e27;--primary:#2c5a45;--primary-ink:#fbf8f1;--accent:#a94f20;--muted:#59635e;--border:#e6dccb;--radius:16px;--shadow:0 20px 50px -24px rgba(44,90,69,.45)}
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:1040px;padding:48px 24px 80px;background:var(--bg);color:var(--ink);font:16px/1.6 "Manrope",system-ui,sans-serif;animation:fade .6s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;color:var(--primary);line-height:1.15;margin:0 0 .5em}
+h1{font-size:3.2rem;margin-bottom:.3em}
+h1::before{content:"LearnSphere.";display:block;font-size:1rem;letter-spacing:0;text-transform:uppercase;color:var(--accent);font-family:"Manrope",sans-serif;font-weight:700;margin-bottom:12px}
+h2{font-size:1.7rem;margin-top:1.4em}
+h3{font-size:1.2rem}
+p{color:var(--muted);margin:.4em 0}
+strong{color:var(--ink)}
+a{color:var(--accent);font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
+hr{border:0;border-top:1px solid var(--border);margin:32px 0}
+br+br{display:none}
+button,input[type=submit]{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:12px 24px;border:0;border-radius:999px;background:var(--primary);color:var(--primary-ink);font:600 15px "Manrope",sans-serif;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s,background .2s}
+button:hover{transform:translateY(-2px);background:var(--accent)}
+button:disabled{opacity:.75;cursor:not-allowed;transform:none}
+label{display:block;font-weight:600;font-size:14px;margin:18px 0 6px;color:var(--ink)}
+input,select,textarea{width:100%;max-width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--ink);font:15px "Manrope",sans-serif;transition:border .2s,box-shadow .2s}
+textarea{border-radius:var(--radius);resize:vertical}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 4px rgba(44,90,69,.15)}
+form{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;margin:16px 0}
+form br{display:none}
+form button[type=submit]{margin-top:24px}
+/* Cards for lists loaded by script */
+#courseContainer>div,#courses>section,#contentContainer>div,#certificatesContainer>div,.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+#courseContainer>div:hover,#courses>section:hover,#contentContainer>div:hover,#certificatesContainer>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+#courses>section hr{display:none}
+#courseContainer>div h2,#courses>section h2{margin-top:0;font-size:1.35rem}
+#message{font-weight:600;color:var(--accent)}
+#studentInfo,#mentorInfo{display:inline-block;padding:6px 16px;border-radius:999px;background:var(--primary);color:var(--primary-ink);font-weight:600}
+img{border-radius:8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden}
+th,td{padding:12px 16px;border-bottom:1px solid var(--border);text-align:left}
+th{background:var(--primary);color:var(--primary-ink)}
+@media(max-width:600px){body{padding:28px 16px}form{padding:20px}button{width:100%;justify-content:center}}
+
+#courseContainer{display:grid;gap:16px}
+#courseContainer>h2{margin-bottom:0}
+#courseContainer>div{margin:0}
+[id$=Container]>div,[id$=List]>div{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+[id$=Container]>div:hover,[id$=List]>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+
+/* Student-page layouts */
+html{color-scheme:light}body{display:block;min-height:100vh;letter-spacing:0}
+[hidden]{display:none!important}h1,h2,h3,p,a,legend{overflow-wrap:anywhere}
+button{max-width:100%;white-space:normal;justify-content:center;text-align:center;line-height:1.4}
+:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+input[type=radio],input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;padding:0;accent-color:var(--primary)}
+#studentInfo:empty{display:none}
+.header{display:flex;justify-content:space-between;align-items:center;gap:20px;background:transparent;color:var(--ink);padding:0 0 24px;border-bottom:1px solid var(--border)}
+.header h1{font-size:2.8rem;margin:0}.header .logout-btn{width:auto;margin:0;background:var(--primary);color:var(--primary-ink)}
+.container{padding:0;width:auto;background:transparent;box-shadow:none;border-radius:0}
+.welcome{padding:28px 0;margin:12px 0 24px;background:transparent;border-bottom:1px solid var(--border);box-shadow:none;border-radius:0}
+.welcome h2{margin:0 0 16px}.welcome p{margin:8px 0}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.cards .card{margin:0;text-align:left;display:flex;flex-direction:column;padding:26px;border-radius:16px;box-shadow:none}
+.cards .card h3{font-size:1.4rem;margin:0 0 12px}.cards .card p{flex:1;margin-bottom:22px}
+.cards .card button{width:100%;margin:0;background:var(--primary);color:var(--primary-ink)}
+.cards .card button:hover,.header .logout-btn:hover{background:var(--accent)}
+#requests,#certificateContainer:has(>section){display:grid;gap:20px;margin-top:28px}
+#requests>section,#certificateContainer>section{padding:28px;background:var(--card);border:1px solid var(--border);border-radius:16px}
+#requests>section h2,#certificateContainer>section h2{margin:0 0 16px}#requests>section hr{display:none}
+#requests>section p{margin:8px 0}#requests>section strong{color:var(--primary)}
+header{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
+#contentNumber{font-size:.85rem;font-weight:700;color:var(--accent);margin-bottom:10px}
+#contentTitle{margin-top:0}#contentText{white-space:pre-wrap;line-height:1.85;font-size:1.06rem;max-width:75ch;padding:16px 0 28px}
+#testForm{padding:0;background:transparent;border:0;border-radius:0}
+.question{border:0;border-top:1px solid var(--border);padding:24px 0;margin:20px 0;min-width:0}
+.question legend{font-weight:700;padding:0 0 12px;max-width:100%}.choice{display:flex;align-items:center;gap:10px;padding:12px 16px;margin:8px 0;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer}
+.choice:has(input:checked){border-color:var(--primary);background:var(--bg)}
+#completed{border-top:2px solid var(--primary);padding-top:24px}
+#courseContainer{display:block}#courseContainer h2{margin-top:0}#courseContainer h3{margin-top:28px}
+#submissionSection{padding:8px 0}#submissionSection h2{margin-top:0}#submissionSection input{width:100%!important;max-width:600px}
+#submissionMessage,#certificateMessage,#message{min-height:1.5em;margin:18px 0;font-weight:600}#submissionMessage:empty,#certificateMessage:empty,#message:empty{margin:0;min-height:0}
+#certificateContainer{margin-top:28px}#certificateContainer>div{border:3px double var(--primary)!important;border-radius:0;padding:40px!important;box-shadow:none;transform:none;background:var(--card)}
+#certificateContainer>div h1{font-size:2rem;margin:20px 0}#certificateContainer>div h1::before{content:none}
+#certificateContainer>div h2{margin:20px 0;font-size:1.8rem}#certificateContainer>div>div{gap:24px;flex-wrap:wrap}
+#certificateContainer img{max-width:100%!important;object-fit:contain}
+body.login-page{max-width:520px;padding-top:72px}.login-page .container{width:100%;padding:0}
+.login-page h2{text-align:left;font-size:2.8rem;margin:0 0 28px}
+.login-page h2::before{content:'LearnSphere.';display:block;font:700 1rem 'Manrope',sans-serif;color:var(--accent);margin-bottom:16px}
+.login-page form{padding:28px;margin-bottom:24px}.login-page button{width:100%;margin:24px 0 0}
+.login-page .register-link{text-align:center;margin-top:20px}.login-page .register-link a{color:var(--accent)}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){h1{font-size:2.2rem}.header{align-items:flex-start}.header h1{font-size:2rem}.header .logout-btn{padding:10px 16px}.cards{grid-template-columns:1fr}.container{padding:0}.header{padding:0 0 20px}.welcome{padding:20px 0}.cards .card{padding:22px}#certificateContainer>div{padding:22px 16px!important}#certificateContainer>div h1{font-size:1.5rem}#certificateContainer>div h2{font-size:1.4rem}.login-page h2{font-size:2.2rem}body.login-page{padding-top:40px}}
+@media(prefers-reduced-motion:reduce){body{animation:none}*{transition:none!important;scroll-behavior:auto!important}}
+@media print{body{max-width:none;padding:0;background:var(--card);animation:none}body>h1,body>button,#certificateContainer>button{display:none!important}#certificateContainer{margin:0}#certificateContainer>div{break-inside:avoid;border-color:var(--primary)!important}#certificateContainer br{display:none}}
+
+</style><style>img{max-width:100%;border-radius:12px}textarea{width:100%;box-sizing:border-box}</style>
+</head>
+
+<body>
+
+    <h1>Course Details</h1>
+
+    <div id="courseContainer">
+        <p>Loading course...</p>
+    </div>
+
+    <div id="requestSection"></div>
+
+    <hr>
+
+    <div id="topicsContainer">
+        <h2>Course Topics</h2>
+        <p>Loading topics...</p>
+    </div>
+
+    <hr>
+
+    <div id="completionSection">
+
+        <h2>Course Completion</h2>
+
+        <p id="completionMessage">
+            Loading course progress...
+        </p>
+
+        <button
+            id="projectSubmissionButton"
+            onclick="openProjectSubmission()"
+        >
+            Open Project Submission
+        </button>
+
+    </div>
+
+    <br>
+
+    <button onclick="goBack()">
+        Back to My Courses
+    </button>
+
+
+    <script>
+
+        // ==============================
+        // CHECK STUDENT LOGIN
+        // ==============================
+
+        const studentId =
+            localStorage.getItem("studentId");
+
+        if (!studentId) {
+
+            window.location.href =
+                "student-login.html";
+        }
+
+
+        // ==============================
+        // GET COURSE ID
+        // ==============================
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const courseId =
+            urlParams.get("courseId");
+
+
+        if (!courseId) {
+
+            document.getElementById(
+                "courseContainer"
+            ).innerHTML =
+                "<p>Course not found.</p>";
+
+        } else {
+
+            loadCourse();
+            loadAccessState();
+        }
+
+
+        // ==============================
+        // LOAD COURSE
+        // ==============================
+
+        async function loadCourse() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/courses/"
+                        + courseId
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Course not found"
+                    );
+                }
+
+
+                const course =
+                    await response.json();
+
+
+                displayCourse(course);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                document.getElementById(
+                    "courseContainer"
+                ).innerHTML =
+                    "<p>Unable to load course details.</p>";
+            }
+        }
+
+        async function loadAccessState() {
+            const completionSection = document.getElementById("completionSection");
+            completionSection.style.display = "none";
+            document.getElementById("projectSubmissionButton").disabled = true;
+            document.getElementById("topicsContainer").innerHTML =
+                "<h2>Course Content</h2><p>Available after enrollment is accepted.</p>";
+
+            try {
+                const [enrollmentResponse, requestResponse] = await Promise.all([
+                    fetch(`/api/enrollments/student/${studentId}`),
+                    fetch(`/api/student-requests/student/${studentId}`)
+                ]);
+
+                const enrollments = enrollmentResponse.ok ? await enrollmentResponse.json() : [];
+                const requests = requestResponse.ok ? await requestResponse.json() : [];
+                const enrolled = enrollments.some(item => String(item.courseId) === String(courseId));
+
+                if (enrolled) {
+                    completionSection.style.display = "block";
+                    document.getElementById("requestSection").innerHTML =
+                        `<p>Enrollment active</p><button onclick="openChat()">Chat with Mentor</button>`;
+                    const projectResponse = await fetch(
+                        `/api/courses/${courseId}/project-instructions?studentId=${studentId}`
+                    );
+                    if (projectResponse.ok) {
+                        const project = await projectResponse.json();
+                        document.getElementById("courseContainer").innerHTML +=
+                            `<h3>Final Project Instructions</h3><p>${project.projectInstructions || ""}</p>`;
+                    }
+                    loadTopics();
+                    return;
+                }
+
+                const existingRequest = requests.find(item => String(item.courseId) === String(courseId));
+                if (existingRequest) {
+                    document.getElementById("requestSection").innerHTML =
+                        `<p>Enrollment request status: <strong>${existingRequest.status}</strong></p>`;
+                } else {
+                    document.getElementById("requestSection").innerHTML = `
+                        <label for="requestMessage">Message to the mentor (optional)</label><br>
+                        <textarea id="requestMessage" rows="3"></textarea><br>
+                        <button onclick="requestEnrollment()">Request Enrollment</button>
+                    `;
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById("requestSection").innerHTML =
+                    "<p>Unable to check course enrollment.</p>";
+            }
+        }
+
+        async function requestEnrollment() {
+            const message = document.getElementById("requestMessage").value;
+            const response = await fetch("/api/student-requests", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    studentId: Number(studentId),
+                    courseId: Number(courseId),
+                    message
+                })
+            });
+
+            if (!response.ok) {
+                alert(response.status === 409 ? "You already requested this course." : "Unable to send request.");
+                return;
+            }
+            await loadAccessState();
+        }
+
+
+        // ==============================
+        // DISPLAY COURSE
+        // ==============================
+
+        function displayCourse(course) {
+
+            document.getElementById(
+                "courseContainer"
+            ).innerHTML = `
+
+                <h2>${course.courseName}</h2>
+
+                <p>
+                    <strong>Skill:</strong>
+                    ${course.skill}
+                </p>
+
+                <p>
+                    <strong>Mentor:</strong>
+                    ${course.mentorName}
+                </p>
+
+                <p>
+                    <strong>Description:</strong>
+                    ${course.description}
+                </p>
+
+            `;
+        }
+
+
+        // ==============================
+        // LOAD TOPICS
+        // ==============================
+
+        async function loadTopics() {
+
+            try {
+                const currentResponse = await fetch(
+                    `/api/course-content/course/${courseId}/current?studentId=${studentId}`
+                );
+
+                if (currentResponse.status === 204) {
+                    document.getElementById("topicsContainer").innerHTML = "<h2>Course Completed</h2>";
+                    document.getElementById("completionMessage").innerText =
+                        "Course completed. You can continue to the final project submission.";
+                    document.getElementById("projectSubmissionButton").disabled = false;
+                    return;
+                }
+                if (!currentResponse.ok) throw new Error("Unable to load the next course content");
+                const current = await currentResponse.json();
+                window.location.href = `student-course-content.html?courseId=${courseId}&contentId=${current.id}`;
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                document.getElementById(
+                    "topicsContainer"
+                ).innerHTML = `
+
+                    <h2>Course Topics</h2>
+
+                    <p>
+                        Unable to load course topics.
+                    </p>
+
+                `;
+            }
+        }
+
+
+        // ==============================
+        // DISPLAY TOPICS
+        // ==============================
+
+        function displayTopics(
+            topics,
+            progress
+        ) {
+
+            const container =
+                document.getElementById(
+                    "topicsContainer"
+                );
+
+
+            container.innerHTML =
+                "<h2>Course Topics</h2>";
+
+
+            if (topics.length === 0) {
+
+                container.innerHTML += `
+
+                    <p>
+                        No topics are available
+                        for this course yet.
+                    </p>
+
+                `;
+
+                document.getElementById(
+                    "completionMessage"
+                ).innerText =
+                    "No topics have been added yet. Ask the course mentor to add topics before submitting your project.";
+
+                document.getElementById("projectSubmissionButton").disabled = true;
+
+                return;
+            }
+
+
+            let completedCount = 0;
+
+
+            // Display every topic
+            topics.forEach(function(topic) {
+
+                // Check whether this topic
+                // exists in student's progress
+                const completed =
+                    progress.some(function(item) {
+
+                        return (
+                            item.topicId === topic.id
+                            &&
+                            item.completed === true
+                        );
+
+                    });
+
+
+                if (completed) {
+
+                    completedCount++;
+                }
+
+
+                const topicDiv =
+                    document.createElement("div");
+
+
+                topicDiv.innerHTML = `
+
+                    <h3>
+                        Topic ${topic.topicNumber}:
+                        ${topic.topicTitle}
+                    </h3>
+
+                    <p>
+                        ${topic.content}
+                    </p>
+
+                    ${renderVideo(topic.videoUrl)}
+
+                    ${topic.meetingUrl ? `<p><strong>Live Class:</strong> ${topic.meetingTitle || "Join session"}<br>${topic.meetingSchedule || "Schedule not provided"}<br><a href="${topic.meetingUrl}" target="_blank" rel="noopener">Join Class</a></p>` : ""}
+
+                    <p id="status-${topic.id}">
+                        ${
+                            completed
+                            ? "Completed ✓"
+                            : "Not Completed"
+                        }
+                    </p>
+
+                    ${
+                        completed
+                        ? ""
+                        : `
+                            <button
+                                onclick="markTopicCompleted(
+                                    ${topic.id}
+                                )">
+
+                                Mark Topic as Completed
+
+                            </button>
+                        `
+                    }
+
+                    <hr>
+
+                `;
+
+
+                container.appendChild(topicDiv);
+
+            });
+
+
+            updateCompletionMessage(
+                completedCount,
+                topics.length
+            );
+        }
+
+        function renderVideo(value) {
+            if (!value) return "";
+            try {
+                const url = new URL(value);
+                if (url.protocol !== "https:" && url.protocol !== "http:") return "";
+                let videoId = "";
+                if (url.hostname === "youtu.be") videoId = url.pathname.slice(1);
+                if (url.hostname.endsWith("youtube.com")) videoId = url.searchParams.get("v") ||
+                    url.pathname.match(/^\/embed\/([^/]+)/)?.[1] || "";
+                if (videoId) {
+                    return `<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}" title="Course video" allowfullscreen></iframe>`;
+                }
+                if (/\.(mp4|webm|ogg)$/i.test(url.pathname)) {
+                    return `<video controls preload="metadata" src="${url.href}" style="max-width:100%"></video>`;
+                }
+                return `<p><a href="${url.href}" target="_blank" rel="noopener">Open learning video</a></p>`;
+            } catch {
+                return "";
+            }
+        }
+
+
+        // ==============================
+        // MARK TOPIC COMPLETED
+        // ==============================
+
+        async function markTopicCompleted(
+            topicId
+        ) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/student-topic-progress/complete"
+                        + "?studentId="
+                        + studentId
+                        + "&courseId="
+                        + courseId
+                        + "&topicId="
+                        + topicId,
+                        {
+                            method: "POST"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to save progress"
+                    );
+                }
+
+
+                const savedProgress =
+                    await response.json();
+
+
+                console.log(
+                    "Saved progress:",
+                    savedProgress
+                );
+
+
+                // Reload the page data
+                // from the database
+                loadTopics();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Unable to save topic progress."
+                );
+            }
+        }
+
+
+        // ==============================
+        // COURSE COMPLETION
+        // ==============================
+
+        function updateCompletionMessage(
+    completedCount,
+    totalTopics
+) {
+
+    const message =
+        document.getElementById(
+            "completionMessage"
+        );
+
+    const projectSubmissionButton =
+        document.getElementById("projectSubmissionButton");
+
+
+    if (
+        completedCount === totalTopics
+    ) {
+
+        projectSubmissionButton.disabled = false;
+
+        message.innerHTML = `
+
+            <strong>
+                Course Completed ✓
+            </strong>
+
+            <br><br>
+
+            You have completed all
+            ${totalTopics} course topics.
+
+            <br><br>
+
+            Your final project can now
+            be submitted.
+
+            <br><br>
+
+            <button onclick="openFeedback()">Leave Mentor Feedback</button>
+
+            <br><br>
+
+        `;
+
+        projectSubmissionButton.textContent =
+            "Submit Final Project";
+
+    } else {
+
+        projectSubmissionButton.disabled = true;
+
+        message.innerHTML = `
+
+            <strong>
+                Course Progress:
+            </strong>
+
+            ${completedCount}
+            /
+            ${totalTopics}
+            topics completed.
+
+            <br><br>
+
+            Complete all topics to unlock
+            the final project submission.
+
+        `;
+
+        projectSubmissionButton.textContent =
+            "Open Project Submission";
+    }
+}
+
+function openChat() {
+    const studentId = localStorage.getItem("studentId");
+    const url = studentId
+        ? "course-chat.html?courseId=" + encodeURIComponent(courseId) + "&studentId=" + encodeURIComponent(studentId)
+        : "course-chat.html?courseId=" + encodeURIComponent(courseId);
+    window.location.href = url;
+}
+
+function openFeedback() {
+    window.location.href = "student-mentor-feedback.html?courseId=" + courseId;
+}
+
+
+        // ==============================
+        // BACK BUTTON
+        // ==============================
+
+        function openProjectSubmission() {
+
+            window.location.href =
+                "project-submission.html?courseId="
+                + encodeURIComponent(courseId);
+        }
+
+        function goBack() {
+
+            window.location.href =
+                "courses.html";
+        }
+
+    </script>
+
+</body>
+
+</html>

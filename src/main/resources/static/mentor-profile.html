@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mentor Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;600;700&display=swap">
+<style>
+/* LearnSphere shared styles — link this in every page */
+:root{--bg:#f7f2e8;--card:#fffdf8;--ink:#1f2e27;--primary:#2c5a45;--primary-ink:#fbf8f1;--accent:#a94f20;--muted:#59635e;--border:#e6dccb;--radius:16px;--shadow:0 20px 50px -24px rgba(44,90,69,.45)}
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:1040px;padding:48px 24px 80px;background:var(--bg);color:var(--ink);font:16px/1.6 "Manrope",system-ui,sans-serif;animation:fade .6s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;color:var(--primary);line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);margin-bottom:.3em}
+h1::before{content:"LearnSphere.";display:block;font-size:1rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-family:"Manrope",sans-serif;font-weight:700;margin-bottom:12px}
+h2{font-size:1.7rem;margin-top:1.4em}
+h3{font-size:1.2rem}
+p{color:var(--muted);margin:.4em 0}
+strong{color:var(--ink)}
+a{color:var(--accent);font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
+hr{border:0;border-top:1px solid var(--border);margin:32px 0}
+br+br{display:none}
+button,input[type=submit]{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:12px 24px;border:0;border-radius:999px;background:var(--primary);color:var(--primary-ink);font:600 15px "Manrope",sans-serif;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s,background .2s}
+button:hover{transform:translateY(-2px);background:var(--accent)}
+button:disabled{opacity:.75;cursor:not-allowed;transform:none}
+label{display:block;font-weight:600;font-size:14px;margin:18px 0 6px;color:var(--ink)}
+input,select,textarea{width:100%;max-width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--ink);font:15px "Manrope",sans-serif;transition:border .2s,box-shadow .2s}
+textarea{border-radius:var(--radius);resize:vertical}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 4px rgba(44,90,69,.15)}
+form{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;margin:16px 0}
+form br{display:none}
+form button[type=submit]{margin-top:24px}
+/* Cards for lists loaded by script */
+#courseContainer>div,#courses>section,#contentContainer>div,#certificatesContainer>div,.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+#courseContainer>div:hover,#courses>section:hover,#contentContainer>div:hover,#certificatesContainer>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+#courses>section hr{display:none}
+#courseContainer>div h2,#courses>section h2{margin-top:0;font-size:1.35rem}
+#message{font-weight:600;color:var(--accent)}
+#studentInfo,#mentorInfo{display:inline-block;padding:6px 16px;border-radius:999px;background:var(--primary);color:var(--primary-ink);font-weight:600}
+img{border-radius:8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden}
+th,td{padding:12px 16px;border-bottom:1px solid var(--border);text-align:left}
+th{background:var(--primary);color:var(--primary-ink)}
+@media(max-width:600px){body{padding:28px 16px}form{padding:20px}button{width:100%;justify-content:center}}
+
+#courseContainer{display:grid;gap:16px}
+#courseContainer>h2{margin-bottom:0}
+#courseContainer>div{margin:0}
+[id$=Container]>div,[id$=List]>div{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin:16px 0;transition:transform .2s,box-shadow .2s}
+[id$=Container]>div:hover,[id$=List]>div:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+</style>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <h1>My Profile</h1>
+
+    <button id="editButton" onclick="enableEdit()">
+        Edit Profile
+    </button>
+
+    <button id="cancelButton"
+            onclick="cancelEdit()"
+            style="display: none;">
+        Cancel
+    </button>
+
+
+    <!-- ================= PROFILE PHOTO ================= -->
+
+    <hr>
+
+    <h3>Profile Photo</h3>
+
+    <img id="profilePhoto"
+         src=""
+         alt="Profile Photo"
+         width="150"
+         height="150">
+
+    <br><br>
+
+    <div id="photoSection">
+
+        <input type="file"
+               id="photoInput"
+               accept="image/*">
+
+        <button type="button"
+                onclick="uploadPhoto()">
+            Upload Photo
+        </button>
+
+        <p id="photoMessage"></p>
+
+    </div>
+
+
+    <!-- ================= PERSONAL DETAILS ================= -->
+
+    <hr>
+
+    <h3>Personal Details</h3>
+
+    <p>
+        <strong>Full Name:</strong>
+        <span id="fullNameView"></span>
+
+        <input type="text"
+               id="fullNameEdit"
+               style="display: none;">
+    </p>
+
+    <p>
+        <strong>Email:</strong>
+        <span id="emailView"></span>
+    </p>
+
+    <p>
+        <strong>Phone Number:</strong>
+        <span id="phoneNumberView"></span>
+
+        <input type="text"
+               id="phoneNumberEdit"
+               style="display: none;">
+    </p>
+
+
+    <!-- ================= EDUCATION DETAILS ================= -->
+
+    <hr>
+
+    <h3>Education Details</h3>
+
+    <p>
+        <strong>Education Level:</strong>
+
+        <span id="educationLevelView"></span>
+
+        <select id="educationLevelEdit"
+                style="display: none;">
+
+            <option value="">Select Education</option>
+            <option value="B.E / B.Tech">B.E / B.Tech</option>
+            <option value="B.Sc">B.Sc</option>
+            <option value="BCA">BCA</option>
+            <option value="M.E / M.Tech">M.E / M.Tech</option>
+            <option value="MCA">MCA</option>
+            <option value="M.Sc">M.Sc</option>
+            <option value="PhD">PhD</option>
+            <option value="Other">Other</option>
+
+        </select>
+    </p>
+
+    <p>
+        <strong>Field of Study:</strong>
+
+        <span id="fieldOfStudyView"></span>
+
+        <input type="text"
+               id="fieldOfStudyEdit"
+               style="display: none;">
+    </p>
+
+    <p>
+        <strong>Institution:</strong>
+
+        <span id="institutionNameView"></span>
+
+        <input type="text"
+               id="institutionNameEdit"
+               style="display: none;">
+    </p>
+
+    <p>
+        <strong>Status:</strong>
+
+        <span id="educationStatusView"></span>
+
+        <select id="educationStatusEdit"
+                style="display: none;">
+
+            <option value="">Select Status</option>
+            <option value="Completed">Completed</option>
+            <option value="Currently Pursuing">
+                Currently Pursuing
+            </option>
+
+        </select>
+    </p>
+
+
+    <!-- ================= PROFESSIONAL DETAILS ================= -->
+
+    <hr>
+
+    <h3>Professional Details</h3>
+
+    <p>
+        <strong>Experience:</strong>
+
+        <span id="yearsOfExperienceView"></span>
+
+        <select id="yearsOfExperienceEdit"
+                style="display: none;">
+
+            <option value="">Select Experience</option>
+            <option value="Fresher / Student">
+                Fresher / Student
+            </option>
+            <option value="0-1 Years">0-1 Years</option>
+            <option value="1-3 Years">1-3 Years</option>
+            <option value="3-5 Years">3-5 Years</option>
+            <option value="5-10 Years">5-10 Years</option>
+            <option value="10+ Years">10+ Years</option>
+
+        </select>
+    </p>
+
+    <p>
+        <strong>Specialization:</strong>
+
+        <span id="specializationView"></span>
+
+        <select id="specializationEdit"
+                style="display: none;">
+
+            <option value="">Select Specialization</option>
+
+            <option value="Frontend Development">
+                Frontend Development
+            </option>
+
+            <option value="Backend Development">
+                Backend Development
+            </option>
+
+            <option value="Full Stack Development">
+                Full Stack Development
+            </option>
+
+            <option value="Mobile Development">
+                Mobile Development
+            </option>
+
+            <option value="Data Science">
+                Data Science
+            </option>
+
+            <option value="Machine Learning / AI">
+                Machine Learning / AI
+            </option>
+
+            <option value="Cybersecurity">
+                Cybersecurity
+            </option>
+
+            <option value="Cloud Computing">
+                Cloud Computing
+            </option>
+
+            <option value="DevOps">
+                DevOps
+            </option>
+
+            <option value="Database Management">
+                Database Management
+            </option>
+
+            <option value="Software Testing">
+                Software Testing
+            </option>
+
+            <option value="Competitive Programming">
+                Competitive Programming
+            </option>
+
+        </select>
+    </p>
+
+
+    <!-- ================= TECHNICAL SKILLS ================= -->
+
+    <hr>
+
+    <h3>Technical Skills</h3>
+
+    <!-- View Mode -->
+    <p id="skillsView"></p>
+
+    <!-- Edit Mode -->
+    <div id="skillsEdit"
+         style="display: none;">
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="Java">
+            Java
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="Python">
+            Python
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="C">
+            C
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="C++">
+            C++
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="JavaScript">
+            JavaScript
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="HTML">
+            HTML
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="CSS">
+            CSS
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="React">
+            React
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="Spring Boot">
+            Spring Boot
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="MySQL">
+            MySQL
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="MongoDB">
+            MongoDB
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="Machine Learning">
+            Machine Learning
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="Cybersecurity">
+            Cybersecurity
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="Cloud Computing">
+            Cloud Computing
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   name="skills"
+                   value="DevOps">
+            DevOps
+        </label>
+
+    </div>
+
+
+    <!-- ================= PROFESSIONAL PROFILES ================= -->
+
+    <hr>
+
+    <h3>Professional Profiles</h3>
+
+    <p>
+        <strong>LinkedIn:</strong>
+
+        <span id="linkedinView"></span>
+
+        <input type="url"
+               id="linkedinEdit"
+               style="display: none;">
+    </p>
+
+    <p>
+        <strong>GitHub:</strong>
+
+        <span id="githubView"></span>
+
+        <input type="url"
+               id="githubEdit"
+               style="display: none;">
+    </p>
+
+
+    <!-- ================= CERTIFICATE SIGNATURE ================= -->
+
+    <hr>
+
+    <h3>Certificate Signature</h3>
+
+    <p>
+        <strong>Saved Signature:</strong>
+        <span id="mentorSignatureView"></span>
+    </p>
+
+    <input type="file"
+           id="mentorSignatureInput"
+           accept=".pdf,image/*">
+
+    <button type="button" onclick="uploadMentorSignature()">
+        Upload Signature PDF
+    </button>
+
+    <p id="mentorSignatureMessage"></p>
+
+
+    <!-- ================= SAVE ================= -->
+
+    <br>
+
+    <button id="saveButton"
+            onclick="saveProfile()"
+            style="display: none;">
+        Save Changes
+    </button>
+
+    <p id="profileMessage"></p>
+
+    <br>
+
+    <a href="mentor-dashboard.html">
+        Back to Dashboard
+    </a>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        const mentorData =
+            localStorage.getItem("mentor");
+
+        if (!mentorData) {
+
+            alert("Please login first!");
+
+            window.location.href =
+                "mentor-login.html";
+        }
+
+        const mentor =
+            JSON.parse(mentorData);
+
+
+        // ================= DISPLAY PROFILE =================
+
+        function renderSignatureLink(signatureValue) {
+            const view = document.getElementById("mentorSignatureView");
+            if (!signatureValue) {
+                view.innerHTML = "Not saved yet";
+                return;
+            }
+
+            const link = document.createElement("a");
+            link.href = signatureValue;
+            link.target = "_blank";
+            link.rel = "noopener";
+            link.textContent = "View signature file";
+            view.innerHTML = "";
+            view.appendChild(link);
+        }
+
+        function displayProfile() {
+
+            document.getElementById("fullNameView").innerText =
+                mentor.fullName || "";
+
+            document.getElementById("emailView").innerText =
+                mentor.email || "";
+
+            document.getElementById("phoneNumberView").innerText =
+                mentor.phoneNumber || "";
+
+            document.getElementById("educationLevelView").innerText =
+                mentor.educationLevel || "";
+
+            document.getElementById("fieldOfStudyView").innerText =
+                mentor.fieldOfStudy || "";
+
+            document.getElementById("institutionNameView").innerText =
+                mentor.institutionName || "";
+
+            document.getElementById("educationStatusView").innerText =
+                mentor.educationStatus || "";
+
+            document.getElementById("yearsOfExperienceView").innerText =
+                mentor.yearsOfExperience || "";
+
+            document.getElementById("specializationView").innerText =
+                mentor.specialization || "";
+
+            document.getElementById("skillsView").innerText =
+                mentor.skills || "No skills added";
+
+            document.getElementById("linkedinView").innerText =
+                mentor.linkedinUrl || "Not provided";
+
+            document.getElementById("githubView").innerText =
+                mentor.githubUrl || "Not provided";
+
+            renderSignatureLink(mentor.mentorSignature);
+
+
+            // Profile photo
+
+            if (mentor.profilePhoto) {
+
+                document.getElementById(
+                    "profilePhoto"
+                ).src = mentor.profilePhoto;
+
+            }
+
+        }
+
+
+        displayProfile();
+
+
+        // ================= ENABLE EDIT MODE =================
+
+        function enableEdit() {
+
+            // Hide view fields
+
+            document.getElementById(
+                "fullNameView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "phoneNumberView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "educationLevelView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "fieldOfStudyView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "institutionNameView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "educationStatusView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "yearsOfExperienceView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "specializationView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "skillsView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "linkedinView"
+            ).style.display = "none";
+
+            document.getElementById(
+                "githubView"
+            ).style.display = "none";
+
+
+
+            // Fill edit fields
+
+            document.getElementById(
+                "fullNameEdit"
+            ).value = mentor.fullName || "";
+
+            document.getElementById(
+                "phoneNumberEdit"
+            ).value = mentor.phoneNumber || "";
+
+            document.getElementById(
+                "educationLevelEdit"
+            ).value = mentor.educationLevel || "";
+
+            document.getElementById(
+                "fieldOfStudyEdit"
+            ).value = mentor.fieldOfStudy || "";
+
+            document.getElementById(
+                "institutionNameEdit"
+            ).value = mentor.institutionName || "";
+
+            document.getElementById(
+                "educationStatusEdit"
+            ).value = mentor.educationStatus || "";
+
+            document.getElementById(
+                "yearsOfExperienceEdit"
+            ).value = mentor.yearsOfExperience || "";
+
+            document.getElementById(
+                "specializationEdit"
+            ).value = mentor.specialization || "";
+
+            document.getElementById(
+                "linkedinEdit"
+            ).value = mentor.linkedinUrl || "";
+
+            document.getElementById(
+                "githubEdit"
+            ).value = mentor.githubUrl || "";
+
+
+
+            // Show edit fields
+
+            document.querySelectorAll(
+                'input[id$="Edit"], select[id$="Edit"]'
+            ).forEach(function(field) {
+
+                field.style.display = "inline-block";
+
+            });
+
+
+            document.getElementById(
+                "skillsEdit"
+            ).style.display = "block";
+
+
+
+            // Check saved skills
+
+            const savedSkills =
+                Array.isArray(mentor.skills)
+                    ? mentor.skills
+                    : (mentor.skills
+                        ? mentor.skills.split(",")
+                            .map(skill => skill.trim())
+                            .filter(skill => skill.length > 0)
+                        : []);
+
+            document.querySelectorAll(
+                'input[name="skills"]'
+            ).forEach(function(checkbox) {
+
+                checkbox.checked =
+                    savedSkills.includes(
+                        checkbox.value
+                    );
+
+            });
+
+
+            // Buttons
+
+            document.getElementById(
+                "editButton"
+            ).style.display = "none";
+
+            document.getElementById(
+                "cancelButton"
+            ).style.display = "inline-block";
+
+            document.getElementById(
+                "saveButton"
+            ).style.display = "inline-block";
+
+        }
+
+
+        // ================= CANCEL EDIT =================
+
+        function cancelEdit() {
+
+            location.reload();
+
+        }
+
+
+        // ================= SAVE PROFILE =================
+
+        async function saveProfile() {
+
+            const selectedSkills = [];
+
+
+            document.querySelectorAll(
+                'input[name="skills"]:checked'
+            ).forEach(function(checkbox) {
+
+                selectedSkills.push(
+                    checkbox.value
+                );
+
+            });
+
+
+            const updatedMentor = {
+
+                fullName:
+                    document.getElementById(
+                        "fullNameEdit"
+                    ).value,
+
+                phoneNumber:
+                    document.getElementById(
+                        "phoneNumberEdit"
+                    ).value,
+
+                educationLevel:
+                    document.getElementById(
+                        "educationLevelEdit"
+                    ).value,
+
+                fieldOfStudy:
+                    document.getElementById(
+                        "fieldOfStudyEdit"
+                    ).value,
+
+                institutionName:
+                    document.getElementById(
+                        "institutionNameEdit"
+                    ).value,
+
+                educationStatus:
+                    document.getElementById(
+                        "educationStatusEdit"
+                    ).value,
+
+                yearsOfExperience:
+                    document.getElementById(
+                        "yearsOfExperienceEdit"
+                    ).value,
+
+                specialization:
+                    document.getElementById(
+                        "specializationEdit"
+                    ).value,
+
+                skills:
+                    selectedSkills,
+
+                linkedinUrl:
+                    document.getElementById(
+                        "linkedinEdit"
+                    ).value,
+
+                githubUrl:
+                    document.getElementById(
+                        "githubEdit"
+                    ).value
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/mentors/" +
+                        mentor.id,
+                        {
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    updatedMentor
+                                )
+                        }
+                    );
+
+
+                if (response.ok) {
+
+                    const updatedMentorData =
+                        await response.json();
+
+
+                    localStorage.setItem(
+                        "mentor",
+                        JSON.stringify(
+                            updatedMentorData
+                        )
+                    );
+
+
+                    Object.assign(
+                        mentor,
+                        updatedMentorData
+                    );
+
+
+                    displayProfile();
+
+
+                    // Return to view mode
+
+                    location.reload();
+
+                } else {
+
+                    document.getElementById(
+                        "profileMessage"
+                    ).innerText =
+                        "Failed to update profile (HTTP " +
+                        response.status +
+                        ").";
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                document.getElementById(
+                    "profileMessage"
+                ).innerText =
+                    "Error connecting to server.";
+
+            }
+
+        }
+
+        async function uploadMentorSignature() {
+
+            const input = document.getElementById("mentorSignatureInput");
+            const message = document.getElementById("mentorSignatureMessage");
+
+            if (!input.files || input.files.length === 0) {
+                message.textContent = "Please choose a PDF or image signature file first.";
+                return;
+            }
+
+            const file = input.files[0];
+            const extension = file.name.split('.').pop().toLowerCase();
+            const allowed = ["pdf", "png", "jpg", "jpeg", "svg"];
+
+            if (!allowed.includes(extension)) {
+                message.textContent = "Only PDF, PNG, JPG, JPEG, or SVG files are allowed.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch(
+                    "/api/mentors/" + mentor.id + "/signature-file",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+                const result = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    message.textContent = result.message || "Unable to upload the certificate signature.";
+                    return;
+                }
+
+                Object.assign(mentor, result);
+                localStorage.setItem("mentor", JSON.stringify(mentor));
+                renderSignatureLink(mentor.mentorSignature);
+                message.textContent = "Certificate signature uploaded successfully.";
+                input.value = "";
+
+            } catch (error) {
+                console.error(error);
+                message.textContent = "Unable to upload the certificate signature.";
+            }
+        }
+
+
+        // ================= UPLOAD PHOTO =================
+
+        async function uploadPhoto() {
+
+            const fileInput =
+                document.getElementById(
+                    "photoInput"
+                );
+
+            const message =
+                document.getElementById(
+                    "photoMessage"
+                );
+
+
+            if (fileInput.files.length === 0) {
+
+                message.innerText =
+                    "Please select a photo first.";
+
+                return;
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "file",
+                fileInput.files[0]
+            );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/mentors/" +
+                        mentor.id +
+                        "/profile-photo",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                if (response.ok) {
+
+                    message.innerText =
+                        await response.text();
+
+
+                    const updatedResponse =
+                        await fetch(
+                            "/api/mentors/" +
+                            mentor.id
+                        );
+
+
+                    const updatedMentor =
+                        await updatedResponse.json();
+
+
+                    localStorage.setItem(
+                        "mentor",
+                        JSON.stringify(
+                            updatedMentor
+                        )
+                    );
+
+
+                    Object.assign(
+                        mentor,
+                        updatedMentor
+                    );
+
+
+                    document.getElementById(
+                        "profilePhoto"
+                    ).src =
+                        updatedMentor.profilePhoto;
+
+
+                    fileInput.value = "";
+
+                } else {
+
+                    message.innerText =
+                        "Photo upload failed.";
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                message.innerText =
+                    "Error connecting to server.";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
