@@ -39,7 +39,7 @@ public class AdminBootstrap implements ApplicationRunner {
         if (!hasEmail && !hasPassword) {
             return;
         }
-        if (!hasEmail || !hasPassword) {
+        if (email == null || email.isBlank() || password == null || password.isBlank()) {
             throw new IllegalStateException(
                     "Set both ADMIN_BOOTSTRAP_EMAIL and ADMIN_BOOTSTRAP_PASSWORD to provision an admin account."
             );
